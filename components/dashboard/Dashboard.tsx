@@ -15,11 +15,11 @@ export default function Dashboard({ children }: DashboardProps) {
     <div className="grid grid-cols-2 w-full">
       <Sidebar ref={sideBarWidth} />
       <NavBar />
-      <main className="bg-blue-400 w-full col-span-3 flex justify-end">
+      <main className=" w-full col-span-3 flex justify-end">
         <div
           className={`${
             isFullWidth ? "lg:w-[calc(100%-300px)]" : "lg:w-[calc(100%-150px)]"
-          } w-full min-h-screen bg-amber-500 transition-all duration-200 ease-in-out`}
+          } w-full min-h-screen  transition-all duration-200 ease-in-out px-4 md:px-10`}
         >
           {children}
         </div>

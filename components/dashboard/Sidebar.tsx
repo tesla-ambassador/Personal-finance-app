@@ -1,41 +1,49 @@
 "use client";
 import React from "react";
+import Link from "next/link";
 import { useSideBarStore } from "@/provider/sidebar-provider";
 import { usePathname } from "next/navigation";
+import {
+  OverviewIcon,
+  BudgetsIcon,
+  TransactionsIcon,
+  RecurringBillsIcon,
+  PotsIcon,
+} from "../icons/nav-icons";
 
 const pages = [
   {
     id: 1,
     name: "Overview",
     url: "/",
-    icon: "/images/icon-nav-overview.svg",
+    icon: OverviewIcon,
   },
   {
     id: 2,
     name: "Transactions",
     url: "#",
-    icon: "/images/icon-nav-transactions.svg",
+    icon: TransactionsIcon,
   },
 
   {
     id: 3,
     name: "Budgets",
     url: "#",
-    icon: "/images/icon-nav-budgets.svg",
+    icon: BudgetsIcon,
   },
 
   {
     id: 4,
     name: "Pots",
     url: "#",
-    icon: "/images/icon-nav-pots.svg",
+    icon: PotsIcon,
   },
 
   {
     id: 5,
     name: "Recurring Bills",
-    url: "#",
-    icon: "/images/icon-nav-recurring-bills.svg",
+    url: "/recurringbills",
+    icon: RecurringBillsIcon,
   },
 ];
 
@@ -74,27 +82,41 @@ export default function Sidebar({ ref }: SideBarProps) {
           </div>
         </div>
         <div>
-          <div className="text-white">
+          <div className="text-[#B3B3B3] mt-6">
             {pages.map((page) => (
-              <a
-                key={page.id}
-                href={page.url}
-                className="flex items-center gap-6 py-4 px-8"
-              >
-                <img
-                  src={page.icon}
-                  className={`${
-                    !isFullWidth && "w-7 mx-auto"
-                  } transition-all duration-200 ease-in-out`}
-                />
+              <Link key={page.id} href={page.url}>
                 <div
-                  className={`${
-                    isFullWidth ? "w-full opacity-100" : "w-0 opacity-0"
-                  } transition-all duration-200 ease-in-out overflow-hidden`}
+                  className={`flex items-center gap-6 py-4 px-8 group ${
+                    currentPath === page.url &&
+                    "bg-[#F8F4F0] rounded-tr-lg rounded-br-lg border-l-4 text-[#201F24] border-l-[#277C78] py-3"
+                  }`}
                 >
-                  {page.name}
+                  <page.icon
+                    className={
+                      isFullWidth
+                        ? `${
+                            currentPath === page.url
+                              ? "transition-all duration-200 ease-in-out fill-[#277C78]"
+                              : "transition-all duration-200 ease-in-out fill-[#B3B3B3] group-hover:fill-white"
+                          }`
+                        : `${
+                            currentPath === page.url
+                              ? "transition-all duration-200 ease-in-out size-7 mx-auto fill-[#201F24]"
+                              : "transition-all duration-200 ease-in-out fill-[#B3B3B3] group-hover:fill-white size-7 mx-auto"
+                          }`
+                    }
+                  />
+                  <div
+                    className={`${
+                      isFullWidth ? "w-full opacity-100" : "w-0 opacity-0"
+                    } ${
+                      currentPath !== page.url && "group-hover:text-white"
+                    } transition-all duration-200 ease-in-out overflow-hidden`}
+                  >
+                    {page.name}
+                  </div>
                 </div>
-              </a>
+              </Link>
             ))}
           </div>
         </div>
@@ -128,7 +150,7 @@ export default function Sidebar({ ref }: SideBarProps) {
 export function NavBar() {
   const currentPath = usePathname();
   return (
-    <div className="px-4 sm:px-10 bg-[#201F24] w-full h-[3.25rem] sm:h-[4.625rem] rounded-tl-2xl rounded-tr-2xl lg:hidden fixed bottom-0 left-0">
+    <div className="px-4 sm:px-10 bg-[#201F24] w-full h-[3.25rem] sm:h-[4.625rem] rounded-tl-2xl rounded-tr-2xl lg:hidden fixed z-10 bottom-0 left-0">
       <div className="flex justify-between items-center gap-3 h-full pt-2">
         {pages.map((page) => (
           <a
@@ -137,11 +159,23 @@ export function NavBar() {
             className={`w-full text-[#B3B3B3] h-full flex justify-center md:flex-col items-center gap-2 rounded-tr-lg rounded-tl-lg py-2 transition-all duration-200 ease-in-out
           ${
             currentPath === page.url &&
-            "bg-[#F8F4F0] border-b-2 border-b-[#277C78]"
+            "bg-[#F8F4F0] border-b-4 border-b-[#277C78]"
           }`}
           >
-            <img src={page.icon} alt="Icon" className="sm:w-5 md:w-7 fill-red-500 stroke-red-500" />
-            <span className="hidden md:inline-flex">{page.name}</span>
+            <page.icon
+              className={`${
+                currentPath === page.url ? "fill-[#277C78]" : "fill-[#b3b3b3]"
+              } sm:size-7 `}
+            />
+            <span
+              className={`hidden md:inline-flex text-sm ${
+                currentPath === page.url
+                  ? "text-[#201F24] font-semibold"
+                  : "text-[#B3B3B3]"
+              }`}
+            >
+              {page.name}
+            </span>
           </a>
         ))}
       </div>
