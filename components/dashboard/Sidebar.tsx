@@ -35,7 +35,7 @@ const pages = [
   {
     id: 4,
     name: "Pots",
-    url: "#",
+    url: "/pots",
     icon: PotsIcon,
   },
 
@@ -136,7 +136,7 @@ export default function Sidebar({ ref }: SideBarProps) {
           <div
             className={`${
               isFullWidth ? "w-full opacity-100" : "w-0 opacity-0"
-            }transform-all duration-200 ease-in-out overflow-hidden`}
+            }transform-all duration-75 ease-in-out overflow-hidden`}
           >
             Minimize Menu
           </div>
