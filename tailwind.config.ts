@@ -17,9 +17,12 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        xs: "calc(var(--radius) - 6px)",
       },
       screens: {
         desktop: "1440px",
+        pro: "390px",
+        proMax: "430px",
       },
     },
   },

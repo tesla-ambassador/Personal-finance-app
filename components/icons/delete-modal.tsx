@@ -1,12 +1,12 @@
 import { Button } from "../ui/button";
 import { usePotsStore } from "@/provider/pots-provider";
+import { DialogClose } from "../ui/dialog";
 
 interface DeleteModalProps {
   name: string;
   description: string;
   type: "budget" | "pots";
   theme: string;
-  cancelDelete: () => void;
 }
 
 export function DeleteModal({
@@ -14,7 +14,6 @@ export function DeleteModal({
   description,
   type,
   theme,
-  cancelDelete,
 }: DeleteModalProps) {
   const { deletePot } = usePotsStore((state) => state);
   return (
@@ -33,13 +32,14 @@ export function DeleteModal({
         >
           Yes, Confirm Deletion
         </Button>
-        <Button
-          variant={"link"}
-          onClick={cancelDelete}
-          className="w-full hover:no-underline text-[#696868] hover:text-[#201F24]"
-        >
-          No, Go Back
-        </Button>
+        <DialogClose asChild>
+          <Button
+            variant={"link"}
+            className="w-full hover:no-underline text-[#696868] hover:text-[#201F24]"
+          >
+            No, Go Back
+          </Button>
+        </DialogClose>
       </div>
     </div>
   );

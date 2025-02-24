@@ -3,7 +3,7 @@ import React from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePotsStore } from "@/provider/pots-provider";
+import { toast } from "@/hooks/use-toast";
 
 import {
   Form,
@@ -14,7 +14,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
+import { DialogClose } from "../ui/dialog";
+
 import { Input } from "@/components/ui/input";
+import { BillPaidIcon } from "../icons/success-error-icons";
 
 export const budgetCategories = [
   "Entertainment",
@@ -58,6 +61,7 @@ import {
 import { Separator } from "@radix-ui/react-select";
 import { Button } from "@/components/ui/button";
 import { Pot } from "@/store/pots-store";
+import { Budget } from "@/store/budgets-store";
 
 interface GeneralFormProps {
   name?: string;
@@ -67,17 +71,11 @@ interface GeneralFormProps {
   category?: string;
   theme?: string;
   total?: number;
+  action: (newData: Pot | Budget) => void;
+  dataArray: Pot[] | Budget[];
 }
 
-export function GeneralForm({
-  name,
-  amount,
-  type,
-  isEdit,
-  category,
-  theme,
-  total,
-}: GeneralFormProps) {
+export function GeneralForm({ type, action, dataArray }: GeneralFormProps) {
   const generalFormSchema = z.object({
     name: z
       .string({ required_error: "Pots name is Required" })
@@ -98,7 +96,7 @@ export function GeneralForm({
     budgetCategory: z.string(),
   });
 
-  const { editPot, addPot } = usePotsStore((state) => state);
+  const closeRef = React.useRef<HTMLButtonElement>(null);
 
   const form = useForm<z.infer<typeof generalFormSchema>>({
     resolver: zodResolver(generalFormSchema),
@@ -119,9 +117,22 @@ export function GeneralForm({
         total: 0,
         theme: values.theme,
       };
-      addPot(newPot);
+      if (dataArray.some((data) => data.theme === newPot.theme)) {
+        toast({
+          title: "Something isn't right!",
+          description: "This theme is already in use.",
+          variant: "destructive",
+          className: "bg-[#C94736] text-lg",
+        });
+        return;
+      } else {
+        action(newPot)
+      }
     } else {
       console.log("Type shiii");
+    }
+    if (closeRef.current) {
+      closeRef.current.click();
     }
   }
   return (
@@ -190,6 +201,7 @@ export function GeneralForm({
                         {...field}
                         className="px-5 py-3 placeholder:text-[#B3B3B3]"
                         placeholder="e.g. Rainy Days"
+                        autoComplete="off"
                       />
                       <div className="pt-1 text-[0.75rem] text-end w-full">
                         {form.control._formState.errors?.name ? (
@@ -230,6 +242,7 @@ export function GeneralForm({
                       {...field}
                       placeholder="e.g. 2000"
                       className="px-5 pl-8 py-3 placeholder:text-[#B3B3B3]"
+                      autoComplete="off"
                     />
                     <span className="absolute left-5 top-0 h-full flex items-center text-[#B3B3B3]">
                       $
@@ -254,7 +267,25 @@ export function GeneralForm({
                 >
                   <FormControl>
                     <SelectTrigger className="px-5 py-3">
-                      <SelectValue />
+                      {dataArray.some((data) => data.theme === field.value) ? (
+                        <div className="flex items-center gap-4">
+                          <div
+                            style={{
+                              backgroundColor: `${form.formState.defaultValues?.theme}`,
+                            }}
+                            className={`h-5 w-5 rounded-full`}
+                          ></div>
+                          <span>
+                            {Object.keys(themeObject).filter(
+                              (key) =>
+                                themeObject[key] ===
+                                form.formState.defaultValues?.theme
+                            )}
+                          </span>
+                        </div>
+                      ) : (
+                        <SelectValue />
+                      )}
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent
@@ -263,13 +294,30 @@ export function GeneralForm({
                   >
                     <SelectGroup className="space-y-3">
                       {Object.entries(themeObject).map(([key, val]) => (
-                        <SelectItem key={key} value={val}>
-                          <div className="flex items-center gap-4">
-                            <div
-                              style={{ backgroundColor: `${val}` }}
-                              className={`h-5 w-5 rounded-full`}
-                            ></div>
-                            <span>{key}</span>
+                        <SelectItem
+                          key={key}
+                          value={val}
+                          disabled={dataArray.some((data) => data.theme === val)}
+                        >
+                          <div className="w-full flex items-center">
+                            <div className="flex items-center gap-4">
+                              <div
+                                style={{ backgroundColor: `${val}` }}
+                                className={`h-5 w-5 rounded-full`}
+                              ></div>
+                              <span>{key}</span>
+                            </div>
+                            <div className="absolute right-10">
+                              {dataArray.some((data) => data.theme === val) &&
+                                val !== form.formState.defaultValues?.theme && (
+                                  <span>Already used</span>
+                                )}
+                              {val === form.formState.defaultValues?.theme && (
+                                <div className="hide-from-trigger">
+                                  <BillPaidIcon />
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </SelectItem>
                       ))}
@@ -282,6 +330,7 @@ export function GeneralForm({
           <Button type="submit" className="w-full p-4">
             Add {type}
           </Button>
+          <DialogClose ref={closeRef} className="hidden" />
         </form>
       </Form>
     </div>

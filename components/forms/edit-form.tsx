@@ -14,6 +14,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { FormHeading, budgetCategories, themeObject } from "./general-form";
+import { DialogClose } from "../ui/dialog";
+import { BillPaidIcon } from "../icons/success-error-icons";
 
 import { Input } from "@/components/ui/input";
 
@@ -60,7 +62,9 @@ export function EditForm({
     budgetCategory: z.string(),
   });
 
-  const { editPot } = usePotsStore((state) => state);
+  const closeRef = React.useRef<HTMLButtonElement>(null);
+
+  const { editPot, pots } = usePotsStore((state) => state);
 
   const form = useForm<z.infer<typeof editFormSchema>>({
     resolver: zodResolver(editFormSchema),
@@ -83,6 +87,9 @@ export function EditForm({
       editPot(theme, updatedPot);
     } else {
       console.log("Somn ain't right");
+    }
+    if (closeRef.current) {
+      closeRef.current.click();
     }
   }
   return (
@@ -151,6 +158,7 @@ export function EditForm({
                         {...field}
                         className="px-5 py-3 placeholder:text-[#B3B3B3]"
                         placeholder="e.g. Rainy Days"
+                        autoComplete="off"
                       />
                       <div className="pt-1 text-[0.75rem] text-end w-full">
                         {form.control._formState.errors?.name ? (
@@ -215,7 +223,21 @@ export function EditForm({
                 >
                   <FormControl>
                     <SelectTrigger className="px-5 py-3">
-                      <SelectValue />
+                      {pots.some((pot) => pot.theme === field.value) ? (
+                        <div className="flex items-center gap-4">
+                          <div
+                            style={{ backgroundColor: `${theme}` }}
+                            className={`h-5 w-5 rounded-full`}
+                          ></div>
+                          <span>
+                            {Object.keys(themeObject).filter(
+                              (key) => themeObject[key] === theme
+                            )}
+                          </span>
+                        </div>
+                      ) : (
+                        <SelectValue />
+                      )}
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent
@@ -224,13 +246,28 @@ export function EditForm({
                   >
                     <SelectGroup className="space-y-3">
                       {Object.entries(themeObject).map(([key, val]) => (
-                        <SelectItem key={key} value={val}>
-                          <div className="flex items-center gap-4">
-                            <div
-                              style={{ backgroundColor: `${val}` }}
-                              className={`h-5 w-5 rounded-full`}
-                            ></div>
-                            <span>{key}</span>
+                        <SelectItem
+                          key={key}
+                          value={val}
+                          disabled={pots.some((pot) => pot.theme === val)}
+                        >
+                          <div className="w-full flex items-center">
+                            <div className="flex items-center gap-4">
+                              <div
+                                style={{ backgroundColor: `${val}` }}
+                                className={`h-5 w-5 rounded-full`}
+                              ></div>
+                              <span>{key}</span>
+                            </div>
+                            <div className="absolute right-10">
+                              {pots.some((pot) => pot.theme === val) &&
+                                val !== theme && <span>Already used</span>}
+                              {val === form.formState.defaultValues?.theme && (
+                                <div className="hide-from-trigger">
+                                  <BillPaidIcon />
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </SelectItem>
                       ))}
@@ -243,6 +280,7 @@ export function EditForm({
           <Button type="submit" className="w-full p-4">
             Save Changes
           </Button>
+          <DialogClose ref={closeRef} asChild className="hidden" />
         </form>
       </Form>
     </div>

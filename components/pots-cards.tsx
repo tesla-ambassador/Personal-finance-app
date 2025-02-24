@@ -1,6 +1,4 @@
 import React from "react";
-import { Button } from "./ui/button";
-import { Plus } from "lucide-react";
 import { PotsProgressBar } from "./progress-bars";
 import { EllipsisDropdown } from "./ellipsis-dropdown";
 import { convertToDollar } from "@/hooks/convert-to-dollar";
@@ -48,7 +46,12 @@ export function PotsCard({ name, theme, target, total }: PotsCard) {
         </div>
       </div>
       {/* Card Footer */}
-      <UpdatePotsTotal />
+      <UpdatePotsTotal
+        theme={theme}
+        name={name}
+        target={target}
+        total={total}
+      />
     </div>
   );
 }

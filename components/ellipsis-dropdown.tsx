@@ -28,7 +28,7 @@ interface EllipsisDropdownProps {
   type: "budget" | "pots";
   amount: string;
   theme: string;
-  total: number;
+  total?: number;
 }
 
 export function EllipsisDropdown({
@@ -90,6 +90,7 @@ export function EllipsisDropdown({
               amount={amount}
               theme={theme}
               total={total}
+              category={name}
             />
           ) : (
             <DeleteModal
@@ -98,9 +99,6 @@ export function EllipsisDropdown({
               theme={theme}
               description={`Are you sure you want to delete this ${type}? This action cannot be
         reversed, and all the data inside it will be removed forever.`}
-              cancelDelete={() => {
-                console.log("Closed Modal");
-              }}
             />
           )}
         </DialogContent>

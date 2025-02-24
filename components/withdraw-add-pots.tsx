@@ -1,3 +1,5 @@
+"use client";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { WithdrawOrAddPotsForm } from "./forms/updatePots-form";
@@ -11,18 +13,39 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-export function UpdatePotsTotal() {
+interface UpdatePotsTotalProps {
+  name: string;
+  total: number;
+  target: number;
+  theme: string;
+}
+
+export function UpdatePotsTotal({
+  name,
+  total,
+  target,
+  theme,
+}: UpdatePotsTotalProps) {
+  const [typeOfUpdate, setTypeOfUpdate] = React.useState<"Withdraw" | "Add">(
+    "Withdraw"
+  );
   return (
     <Dialog>
       <div className="transition-all duration-100 ease-in-out w-full flex justify-between items-center gap-4">
         <DialogTrigger asChild>
-          <Button className="bg-[#F8F4F0] text-black hover:bg-white hover:border-[#98908B] hover:border-2 active:scale-95 w-full">
+          <Button
+            onClick={() => setTypeOfUpdate("Add")}
+            className="bg-[#F8F4F0] text-black hover:bg-white hover:border-[#98908B] hover:border-2 active:scale-95 w-full"
+          >
             <Plus />
             <span>Add Money</span>
           </Button>
         </DialogTrigger>
         <DialogTrigger asChild>
-          <Button className="bg-[#F8F4F0] text-black hover:bg-white hover:border-[#98908B] hover:border-2 active:scale-95 w-full">
+          <Button
+            onClick={() => setTypeOfUpdate("Withdraw")}
+            className="bg-[#F8F4F0] text-black hover:bg-white hover:border-[#98908B] hover:border-2 active:scale-95 w-full"
+          >
             Withdraw
           </Button>
         </DialogTrigger>
@@ -35,7 +58,13 @@ export function UpdatePotsTotal() {
             addition of a pot
           </DialogDescription>
         </DialogHeader>
-        <WithdrawOrAddPotsForm />
+        <WithdrawOrAddPotsForm
+          target={target}
+          total={total}
+          type={typeOfUpdate}
+          name={name}
+          theme={theme}
+        />
       </DialogContent>
     </Dialog>
   );

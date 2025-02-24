@@ -35,10 +35,7 @@ export const createPotsStore = (initState: PotsState = defaultState) => {
         pots: state.pots.map((pot) =>
           pot.theme === id
             ? {
-                ...pot,
-                name: updatedPot.name,
-                theme: updatedPot.theme,
-                target: updatedPot.target,
+                ...updatedPot,
               }
             : pot
         ),
