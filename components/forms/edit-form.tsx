@@ -3,7 +3,7 @@ import React from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePotsStore } from "@/provider/pots-provider";
+import { captitalizeFirst } from "@/hooks/capitalize-first-word";
 
 import {
   Form,
@@ -30,14 +30,17 @@ import {
 import { Separator } from "@radix-ui/react-select";
 import { Button } from "@/components/ui/button";
 import { Pot } from "@/store/pots-store";
+import { Budget } from "@/store/budgets-store";
 
 interface EditFormProps {
   name?: string;
   amount: string;
-  type: "budget" | "pots";
+  type: "budget" | "pot";
   category?: string;
   theme: string;
   total?: number;
+  dataArray: Budget[] | Pot[];
+  handleOnSubmit: (formData: Pot | Budget, themeId: string) => void;
 }
 
 export function EditForm({
@@ -47,27 +50,36 @@ export function EditForm({
   category,
   theme,
   total,
+  dataArray,
+  handleOnSubmit,
 }: EditFormProps) {
-  const editFormSchema = z.object({
-    name: z
-      .string({ required_error: "Pots name is Required" })
-      .min(2, { message: "Pot name should be 2 characters or more." })
-      .max(30, { message: "Pot name should be less than 30 characters." })
-      .nonempty({ message: "Pots name is Required." }),
-    amount: z.string().nonempty({
-      message:
-        type === "budget" ? "Please set a Maximum Limit" : "Plese set a target",
-    }),
-    theme: z.string(),
-    budgetCategory: z.string(),
-  });
+  const formSchema = z.object(
+    type === "pot"
+      ? {
+          name: z
+            .string({ required_error: "Pots name is Required" })
+            .min(2, { message: "Pot name should be 2 characters or more." })
+            .max(30, { message: "Pot name should be less than 30 characters." })
+            .nonempty({ message: "Pots name is Required." }),
+          amount: z
+            .string()
+            .nonempty({
+              message: "Plese set a target",
+            })
+            .regex(/^\d+$/, "Must be a number"),
+          theme: z.string(),
+        }
+      : {
+          amount: z.string(),
+          theme: z.string(),
+          budgetCategory: z.string(),
+        }
+  );
 
   const closeRef = React.useRef<HTMLButtonElement>(null);
 
-  const { editPot, pots } = usePotsStore((state) => state);
-
-  const form = useForm<z.infer<typeof editFormSchema>>({
-    resolver: zodResolver(editFormSchema),
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       name: name ? name : "",
       amount: amount,
@@ -76,17 +88,24 @@ export function EditForm({
     },
   });
 
-  function onSubmit(values: z.infer<typeof editFormSchema>) {
-    if (type === "pots" && total) {
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    if (type === "pot" && total) {
       const updatedPot: Pot = {
         name: values.name,
         target: Number(values.amount),
         total: total,
         theme: values.theme,
       };
-      editPot(theme, updatedPot);
+      handleOnSubmit(updatedPot, theme);
+    } else if (type === "budget") {
+      const updatedBudget: Budget = {
+        maximum: Number(values.amount),
+        category: values.budgetCategory,
+        theme: values.theme,
+      };
+      handleOnSubmit(updatedBudget, theme);
     } else {
-      console.log("Somn ain't right");
+      throw new Error(`Changes to ${captitalizeFirst(type)} failed!`);
     }
     if (closeRef.current) {
       closeRef.current.click();
@@ -223,7 +242,7 @@ export function EditForm({
                 >
                   <FormControl>
                     <SelectTrigger className="px-5 py-3">
-                      {pots.some((pot) => pot.theme === field.value) ? (
+                      {dataArray.some((data) => data.theme === field.value) ? (
                         <div className="flex items-center gap-4">
                           <div
                             style={{ backgroundColor: `${theme}` }}
@@ -249,7 +268,9 @@ export function EditForm({
                         <SelectItem
                           key={key}
                           value={val}
-                          disabled={pots.some((pot) => pot.theme === val)}
+                          disabled={dataArray.some(
+                            (data) => data.theme === val
+                          )}
                         >
                           <div className="w-full flex items-center">
                             <div className="flex items-center gap-4">
@@ -260,7 +281,7 @@ export function EditForm({
                               <span>{key}</span>
                             </div>
                             <div className="absolute right-10">
-                              {pots.some((pot) => pot.theme === val) &&
+                              {dataArray.some((data) => data.theme === val) &&
                                 val !== theme && <span>Already used</span>}
                               {val === form.formState.defaultValues?.theme && (
                                 <div className="hide-from-trigger">

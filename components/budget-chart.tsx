@@ -2,9 +2,9 @@
 
 import * as React from "react";
 import { Label, Pie, PieChart } from "recharts";
-import { useBudgetStore } from "@/provider/budgets-provider";
-import { convertToDollar } from "@/hooks/convert-to-dollar";
+import { sumOfBudgets, sumOfTransactions } from "@/hooks/budgets-summary";
 import { Budget } from "@/store/budgets-store";
+import { useBudgetStore } from "@/provider/budgets-provider";
 
 import {
   ChartConfig,
@@ -13,31 +13,33 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-export function BudgetPieChart() {
+interface BudgetPieChartProps {
+  data: Budget[];
+}
+
+export function BudgetPieChart({ data }: BudgetPieChartProps) {
   const { budgets, transactions } = useBudgetStore((state) => state);
 
-  const totalMaximums = React.useMemo(() => {
-    return budgets.reduce((acc, curr) => acc + curr.maximum, 0);
-  }, []);
+  const totalSpent = React.useMemo(() => {
+    return transactions.reduce((acc, cur) => acc + cur.amount, 0);
+  }, [budgets]);
 
-  const totalExpenditures = React.useMemo(() => {
-    return transactions.reduce((acc, curr) => acc + curr.amount, 0);
-  }, []);
+  const chartData = React.useMemo(() => {
+    return data.map((budget) => ({
+      category: budget.category,
+      maximum: budget.maximum,
+      fill: budget.theme,
+    }));
+  }, [data]);
 
-  const chartData = budgets.map((budget) => ({
-    name: budget.category,
-    value: budget.maximum,
-    fill: budget.theme,
-  }));
-
-  const generateConfig = (budgets: Budget[]): ChartConfig => {
+  const generateConfig = (data: Budget[]): ChartConfig => {
     const config: Record<string, any> = {
       maximum: {
         label: "Budget Maximum",
       },
     };
 
-    budgets.forEach((budget) => {
+    data.forEach((budget) => {
       // Generate Key as camelCase for safety.
       const safeKey = budget.category
         .toLowerCase()
@@ -53,7 +55,7 @@ export function BudgetPieChart() {
     return config as ChartConfig;
   };
 
-  const chartConfig = React.useMemo(() => generateConfig(budgets), []);
+  const chartConfig = React.useMemo(() => generateConfig(data), [data]);
 
   return (
     <ChartContainer
@@ -67,8 +69,8 @@ export function BudgetPieChart() {
         />
         <Pie
           data={chartData}
-          dataKey="value"
-          nameKey="name"
+          dataKey="maximum"
+          nameKey="category"
           innerRadius={75}
           strokeWidth={5}
         >
@@ -87,10 +89,18 @@ export function BudgetPieChart() {
                       y={viewBox.cy}
                       className="fill-[#201F24] text-2xl lg:text-[2rem] font-bold"
                     >
-                      {convertToDollar(Math.abs(totalExpenditures))}
+                      $
+                      {sumOfTransactions(
+                        budgets,
+                        transactions
+                      ).toLocaleString()}
                     </tspan>
-                    <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-[#696868]">
-                      of {convertToDollar(totalMaximums)} limit
+                    <tspan
+                      x={viewBox.cx}
+                      y={(viewBox.cy || 0) + 24}
+                      className="fill-[#696868]"
+                    >
+                      of ${sumOfBudgets(budgets).toLocaleString()} limit
                     </tspan>
                   </text>
                 );

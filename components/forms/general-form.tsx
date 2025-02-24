@@ -3,6 +3,7 @@ import React from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { usePotsStore } from "@/provider/pots-provider";
 import { toast } from "@/hooks/use-toast";
 
 import {
@@ -35,7 +36,7 @@ export const budgetCategories = [
 export const themeObject: { [key: string]: string } = {
   Green: "#277C78",
   Yellow: "#F2CDAC",
-  Cyan: "#82C97D",
+  Cyan: "#82C9D7",
   Navy: "#626070",
   Red: "#C94736",
   Purple: "#826CB0",
@@ -66,70 +67,72 @@ import { Budget } from "@/store/budgets-store";
 interface GeneralFormProps {
   name?: string;
   amount?: string;
-  type: "budget" | "pots";
-  isEdit: boolean;
+  type: "budget" | "pot";
   category?: string;
   theme?: string;
   total?: number;
-  action: (newData: Pot | Budget) => void;
-  dataArray: Pot[] | Budget[];
+  handleOnSubmit: (data: Pot | Budget) => void;
+  dataArray: Budget[] | Pot[];
 }
 
-export function GeneralForm({ type, action, dataArray }: GeneralFormProps) {
-  const generalFormSchema = z.object({
-    name: z
-      .string({ required_error: "Pots name is Required" })
-      .min(2, { message: "Pot name should be 2 characters or more." })
-      .max(30, { message: "Pot name should be less than 30 characters." })
-      .nonempty({ message: "Pots name is Required." }),
-    amount: z
-      .string()
-      .nonempty({
-        message:
-          type === "budget"
-            ? "Please set a Maximum Limit"
-            : "Plese set a target",
-      })
-      .regex(/^\d+$/, "Must be a number"),
-    maximumSpend: z.string(),
-    theme: z.string(),
-    budgetCategory: z.string(),
-  });
+export function GeneralForm({
+  type,
+  handleOnSubmit,
+  dataArray,
+}: GeneralFormProps) {
+  const formSchema = z.object(
+    type === "pot"
+      ? {
+          name: z
+            .string({ required_error: "Pots name is Required" })
+            .min(2, { message: "Pot name should be 2 characters or more." })
+            .max(30, { message: "Pot name should be less than 30 characters." })
+            .nonempty({ message: "Pots name is Required." }),
+          amount: z
+            .string()
+            .nonempty({
+              message: "Plese set a target",
+            })
+            .regex(/^\d+$/, "Must be a number"),
+          theme: z.string(),
+        }
+      : {
+          amount: z.string(),
+          theme: z.string(),
+          budgetCategory: z.string(),
+        }
+  );
 
   const closeRef = React.useRef<HTMLButtonElement>(null);
 
-  const form = useForm<z.infer<typeof generalFormSchema>>({
-    resolver: zodResolver(generalFormSchema),
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       amount: "",
-      maximumSpend: "",
       theme: "#277C78",
       budgetCategory: "Entertainment",
     },
   });
 
-  function onSubmit(values: z.infer<typeof generalFormSchema>) {
-    if (type === "pots") {
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    if (type === "pot") {
       const newPot: Pot = {
         name: values.name,
         target: Number(values.amount),
+        theme: values.theme,
         total: 0,
+      };
+      handleOnSubmit(newPot);
+    } else if (type === "budget") {
+      const newBudget: Budget = {
+        category: values.budgetCategory,
+        maximum: Number(values.amount),
         theme: values.theme,
       };
-      if (dataArray.some((data) => data.theme === newPot.theme)) {
-        toast({
-          title: "Something isn't right!",
-          description: "This theme is already in use.",
-          variant: "destructive",
-          className: "bg-[#C94736] text-lg",
-        });
-        return;
-      } else {
-        action(newPot)
-      }
+      handleOnSubmit(newBudget);
     } else {
-      console.log("Type shiii");
+      throw new Error(`Type of transaction isn't recognized.`);
     }
     if (closeRef.current) {
       closeRef.current.click();
@@ -297,7 +300,9 @@ export function GeneralForm({ type, action, dataArray }: GeneralFormProps) {
                         <SelectItem
                           key={key}
                           value={val}
-                          disabled={dataArray.some((data) => data.theme === val)}
+                          disabled={dataArray.some(
+                            (data) => data.theme === val
+                          )}
                         >
                           <div className="w-full flex items-center">
                             <div className="flex items-center gap-4">

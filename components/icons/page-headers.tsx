@@ -10,24 +10,19 @@ import {
   DialogTitle,
   DialogHeader,
 } from "../ui/dialog";
-import { GeneralForm } from "../forms/general-form";
-import { Pot } from "@/store/pots-store";
-import { Budget } from "@/store/budgets-store";
+import { PotsUploadForm } from "@/app/pots/pots-forms";
+import { BudgetsUploadForm } from "@/app/budgets/budgets-forms";
 
 interface PageHeaderProps {
   pageName: string;
   containsForm: boolean;
-  uploadFormType?: "budget" | "pots";
-  action: () => void;
-  dataArray: Budget[] | Pot[];
+  uploadFormType?: "budget" | "pot";
 }
 
 export function PageHeader({
   pageName,
   containsForm,
   uploadFormType,
-  action,
-  dataArray,
 }: PageHeaderProps) {
   return (
     <>
@@ -52,14 +47,12 @@ export function PageHeader({
               This Contains an upload form for uploading new {pageName}
             </DialogDescription>
           </DialogHeader>
-          {uploadFormType && (
-            <GeneralForm
-              action={action}
-              dataArray={dataArray}
-              isEdit={false}
-              type={uploadFormType}
-            />
-          )}
+          {uploadFormType &&
+            (uploadFormType === "pot" ? (
+              <PotsUploadForm />
+            ) : (
+              <BudgetsUploadForm />
+            ))}
         </DialogContent>
       </Dialog>
     </>

@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import { convertToDollar } from "@/hooks/convert-to-dollar";
 import { Separator } from "./ui/separator";
 import { useBudgetStore } from "@/provider/budgets-provider";
@@ -10,7 +11,7 @@ export function BudgetSummaryCard() {
   return (
     <div className="mx-auto w-full bg-white rounded-lg px-5 py-6 flex flex-col sm:flex-row sm:justify-between sm:items-center md:p-8 md:gap-8 sm:max-w-[688px] desktop:max-w-[608px] desktop:flex-col">
       <div className="w-full">
-        <BudgetPieChart />
+        <BudgetPieChart data={budgets} />
       </div>
       <div className="w-full">
         <h2 className="font-bold text-[1.25rem] text-[#201F24]">

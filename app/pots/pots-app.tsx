@@ -10,13 +10,9 @@ export default function PotsApp() {
     <>
       <div>
         <PageHeader
-          dataArray={pots}
-          action={() => {
-            addPot;
-          }}
           containsForm={true}
           pageName="Pots"
-          uploadFormType="pots"
+          uploadFormType="pot"
         />
       </div>
       <div className="grid grid-cols-1 gap-6 desktop:grid-cols-2">
@@ -33,3 +29,4 @@ export default function PotsApp() {
     </>
   );
 }
+   

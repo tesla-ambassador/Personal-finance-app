@@ -19,9 +19,9 @@ export default function BudgetsApp() {
       <div className="flex flex-col gap-6 desktop:flex-row desktop:items-start">
         <BudgetSummaryCard />
         <div className="space-y-6 w-full">
-          {budgets.map((budget, index) => (
+          {budgets.map((budget) => (
             <BudgetCard
-              key={index}
+              key={budget.theme}
               category={budget.category}
               maxAmount={budget.maximum}
               theme={budget.theme}

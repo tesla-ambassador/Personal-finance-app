@@ -47,13 +47,17 @@ export function BudgetCard({ category, theme, maxAmount }: Budget) {
         <EllipsisDropdown
           name={category}
           type="budget"
-          amount={maxAmount.toString()}
+          amount={maxAmount}
           theme={theme}
         />
       </div>
       {/* Card Body */}
       <div>
-        <BudgetsProgressBar theme={theme} amount={maxAmount} spent={Math.abs(sumOfBudgetCategory(transactions, category))} />
+        <BudgetsProgressBar
+          theme={theme}
+          amount={maxAmount}
+          spent={Math.abs(sumOfBudgetCategory(transactions, category))}
+        />
       </div>
       {/* Card Footer */}
       <div className="bg-[#F8F4F0] p-4 rounded-lg sm:p-5">

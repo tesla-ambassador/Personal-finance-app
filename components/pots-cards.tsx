@@ -27,8 +27,8 @@ export function PotsCard({ name, theme, target, total }: PotsCard) {
         </div>
         <EllipsisDropdown
           name={name}
-          type="pots"
-          amount={target.toString()}
+          type="pot"
+          amount={target}
           theme={theme}
           total={total}
         />

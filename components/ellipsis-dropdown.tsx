@@ -19,14 +19,16 @@ import {
 } from "./ui/dialog";
 
 import { Separator } from "./ui/separator";
-import { EditForm } from "./forms/edit-form";
-import { DeleteModal } from "./icons/delete-modal";
+import { BudgetsEditForm } from "@/app/budgets/budgets-forms";
+import { PotsEditForm } from "@/app/pots/pots-forms";
+import { DeleteBudgetModal } from "@/app/budgets/delete-budget-modal";
+import { DeletePotModal } from "@/app/pots/delete-pot-modal";
 import { captitalizeFirst } from "@/hooks/capitalize-first-word";
 
 interface EllipsisDropdownProps {
   name: string;
-  type: "budget" | "pots";
-  amount: string;
+  type: "budget" | "pot";
+  amount: number;
   theme: string;
   total?: number;
 }
@@ -84,22 +86,22 @@ export function EllipsisDropdown({
             </DialogDescription>
           </DialogHeader>
           {isEdit ? (
-            <EditForm
-              type={type}
-              name={name}
-              amount={amount}
-              theme={theme}
-              total={total}
-              category={name}
-            />
+            type === "budget" ? (
+              <BudgetsEditForm category={name} theme={theme} maximum={amount} />
+            ) : (
+              total && (
+                <PotsEditForm
+                  name={name}
+                  theme={theme}
+                  target={amount}
+                  total={total}
+                />
+              )
+            )
+          ) : type === "budget" ? (
+            <DeleteBudgetModal name={name} theme={theme} />
           ) : (
-            <DeleteModal
-              name={name}
-              type={type}
-              theme={theme}
-              description={`Are you sure you want to delete this ${type}? This action cannot be
-        reversed, and all the data inside it will be removed forever.`}
-            />
+            <DeletePotModal name={name} theme={theme} />
           )}
         </DialogContent>
       </Dialog>
