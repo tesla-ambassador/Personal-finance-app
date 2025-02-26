@@ -43,81 +43,59 @@ Note: At the time of writing, I didn't implement the bonus features. However, I 
 
 ![](public/images/screenshot.jpeg)
 
-Add a screenshot of your solution. The easiest way to do this is to use Firefox to view your project, right-click the page and select "Take a Screenshot". You can choose either a full-height screenshot or a cropped one based on how long the page is. If it's very long, it might be best to crop it.
-
-Alternatively, you can use a tool like [FireShot](https://getfireshot.com/) to take the screenshot. FireShot has a free option, so you don't need to purchase it.
-
-Then crop/optimize/edit your image however you like, add it to your project, and update the file path in the image above.
-
-**Note: Delete this note and the paragraphs above when you add your screenshot. If you prefer not to add a screenshot, feel free to remove this entire section.**
-
 ### Links
 
-- Solution URL: [Add solution URL here](https://your-solution-url.com)
+- Solution URL: [GitHub Repository](https://github.com/tesla-ambassador/Personal-finance-app)
 - Live Site URL: [Add live site URL here](https://your-live-site-url.com)
 
 ## My process
+Buckle up! This was a very fun project to work on. I had lots of ups and downs but I learned a lot! I feel like I only want to take on more challenging projects like this moving forward.
+If you look through my code, you will find that it's both poorly written and well-written.😂 There were times I was just too tired after working my day job and then trying to fix bugs that seemed impossible to find.
+Anyways, I managed to get this done within a month. That's cause I had to split my time between work and this project. I haven't yet implemented a backend but I plan on doing so after taking on a few more projects like this to cement what I've learned.
 
 ### Built with
 
-- Semantic HTML5 markup
-- CSS custom properties
-- Flexbox
-- CSS Grid
-- Mobile-first workflow
-- [React](https://reactjs.org/) - JS library
-- [Next.js](https://nextjs.org/) - React framework
-- [Styled Components](https://styled-components.com/) - For styles
-
-**Note: These are just examples. Delete this note and replace the list above with your own choices**
+- Next.js
+- Tailwind CSS
+- Shadcn/ui
+- Recharts
+- Vitest
+- [Zustand](https://zustand.docs.pmnd.rs/) - React library for state management
+- [React-hook-form](https://react-hook-form.com/) - React library for form validation
+- [Tanstack Table](https://tanstack.com/table/latest) - React library for data tables and datagrids
 
 ### What I learned
+I learned a bunch of things. I should have documented this while I was developing the app because I seem to have forgotten most of my highlights but among the most notable ones are that I learned how to use Tanstack Table to create a data grid.
+That was mostly for the transactions page and the recurring bills page. It was a bit of a pain to implement some of the functions but I had to repeat writing the code multiple times until it stuck.
+I also had a little more time with react-hook-form. I feel like I'm a lot more comfortable with it now and I'm looking forward to using it in more projects.
+I learned how to use Clsx and a lot more capabilities of Tailwind Css.
+News Flash! Did you know that `next/router` is deprecated! Funny how these frameworks are always changing.
 
-Use this section to recap over some of your major learnings while working through this project. Writing these out and providing code samples of areas you want to highlight is a great way to reinforce your own knowledge.
+I would also like to express my deep sadness for the deprecation of Material Themes in VS Code. I couldn't find a replacement to get themes that I'd be comfortable with and therefore, I have migrated to Zed.
+Zed is great! I'm trying to get comfortable with it but I know It'll do just fine! I look forward to giving you guys a review of it.
 
-To see how you can add code snippets, see below:
-
-```html
-<h1>Some HTML code I'm proud of</h1>
-```
-```css
-.proud-of-this-css {
-  color: papayawhip;
-}
-```
-```js
-const proudOfThisFunc = () => {
-  console.log('🎉')
-}
-```
-
-If you want more help with writing markdown, we'd recommend checking out [The Markdown Guide](https://www.markdownguide.org/) to learn more.
-
+Much as I would love to rant, I'm tired rn... I haven't slept in a bit so I'll just wrap this up and write more when I implement a backend!
 **Note: Delete this note and the content within this section and replace with your own learnings.**
 
 ### Continued development
+I'm going to add authentication and connect to a database so that It's a lot more usable and also when you refresh, my zustand persistence is a bit shaky in that you are able to see the default data for a second or two.
+I noticed a lot of bugs and I tried to fix the ones that I found. If you find any, please feel free to fork the project and submit a pull request.
 
-Use this section to outline areas that you want to continue focusing on in future projects. These could be concepts you're still not completely comfortable with or techniques you found useful that you want to refine and perfect.
-
-**Note: Delete this note and the content within this section and replace with your own plans for continued development.**
 
 ### Useful resources
 
-- [Example resource 1](https://www.example.com) - This helped me for XYZ reason. I really liked this pattern and will use it going forward.
-- [Example resource 2](https://www.example.com) - This is an amazing article which helped me finally understand XYZ. I'd recommend it to anyone still learning this concept.
+Read documentations of the tools I stated above
+Also, you can use AI (Claude) to help explain things to you (NOT to copy and paste code). Cause I found the solutions on stack-overflow either too old or just not directly applicable to my problem.
 
-**Note: Delete this note and replace the list above with resources that helped you during the challenge. These could come in handy for anyone viewing your solution or for yourself when you look back on this project in the future.**
 
 ## Author
 
-- Website - [Add your name here](https://www.your-site.com)
-- Frontend Mentor - [@yourusername](https://www.frontendmentor.io/profile/yourusername)
-- Twitter - [@yourusername](https://www.twitter.com/yourusername)
+- Website - [tesla-ambassador](http://portfolio-pink-ten-21.vercel.app)
+- Frontend Mentor - [@tesla-ambassador](https://www.frontendmentor.io/profile/tesla-ambassador)
+- Twitter - [@Mbawalla_](https://x.com/Mbawalla_)
 
-**Note: Delete this note and add/remove/edit lines above based on what links you'd like to share.**
 
 ## Acknowledgments
 
-This is where you can give a hat tip to anyone who helped you out on this project. Perhaps you worked in a team or got some inspiration from someone else's solution. This is the perfect place to give them some credit.
-
-**Note: Delete this note and edit this section's content as necessary. If you completed this challenge by yourself, feel free to delete this section entirely.**
+I'd like to thank my mama for her internet (Please employ me if you're reading this... I need to move out 😭). I'd also like to thank my girlfriend Comfort, for her patience and understanding. I'd also like to thank my friends, Josh, Ezra and Yafet for their support and encouragement.
+Okay, I'm done... Someone tell Elon Musk I said thank you to him.
