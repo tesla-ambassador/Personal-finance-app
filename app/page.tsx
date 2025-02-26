@@ -1,9 +1,13 @@
-import Image from "next/image";
+import { BudgetStoreProvider } from "@/provider/budgets-provider";
+import { PotsStoreProvider } from "@/provider/pots-provider";
+import { OverViewApp } from "./overview/overview-app";
 
 export default function Home() {
   return (
-    <div className="min-h-screen w-full">
-      
-    </div>
+    <BudgetStoreProvider>
+      <PotsStoreProvider>
+        <OverViewApp />
+      </PotsStoreProvider>
+    </BudgetStoreProvider>
   );
 }

@@ -1,21 +1,15 @@
 import React from "react";
 
-import { DataTable } from "@/components/data-table/data-tables";
-import {
-  RecurringBills,
-  recurringBillsColumns,
-} from "@/components/data-table/columns";
+import { DataTable } from "@/components/data-tables/recurring-bills-data-table";
+import { recurringBillsColumns } from "@/components/data-tables/recurring-bills-columns";
+import { useBudgetStore } from "@/provider/budgets-provider";
 
-import transactions from "@/data.json";
+export default function RecurringBillsDataTable() {
+  const { transactions } = useBudgetStore((state) => state);
 
-async function getData(): Promise<RecurringBills[]> {
-  return transactions.transactions.filter(
+  const recurringBills = transactions.filter(
     (transaction) => transaction.recurring === true
   );
-}
-
-export default async function RecurringBillsDataTable() {
-  const recurringBills = await getData();
 
   return (
     <div className="mx-auto">

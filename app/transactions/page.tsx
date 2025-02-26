@@ -1,11 +1,11 @@
 import React from "react";
 import { BudgetStoreProvider } from "@/provider/budgets-provider";
-import RecurringBillsApp from "./recurring-bills-app";
+import { TransactionsApp } from "./transactions-app";
 
-export default function RecurringBills() {
+export default function Transactions() {
   return (
     <BudgetStoreProvider>
-      <RecurringBillsApp />
+      <TransactionsApp />
     </BudgetStoreProvider>
   );
 }

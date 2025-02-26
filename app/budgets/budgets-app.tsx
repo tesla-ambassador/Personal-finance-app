@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { PageHeader } from "@/components/icons/page-headers";
+import { PageHeader } from "@/components/page-headers";
 import { BudgetCard } from "@/components/budgets-cards";
 import { useBudgetStore } from "@/provider/budgets-provider";
 import { BudgetSummaryCard } from "@/components/budget-summary";

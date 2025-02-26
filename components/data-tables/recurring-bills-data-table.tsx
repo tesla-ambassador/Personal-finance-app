@@ -56,7 +56,6 @@ import { SortIconMobile } from "../icons/data-table-icons";
 
 // Import custom hooks
 import { useMediaQuery } from "@/hooks/media-query-hook";
-import { Rows } from "lucide-react";
 
 // Defining the data table props
 interface DataTableProps<TData, TValue> {
@@ -65,7 +64,7 @@ interface DataTableProps<TData, TValue> {
 }
 
 // Sorting strategies
-const columnSorts = [
+export const columnSorts = [
   { id: 1, name: "Latest", col: "date", desc: false },
   { id: 2, name: "Oldest", col: "date", desc: true },
   { id: 3, name: "A to Z", col: "name", desc: false },

@@ -4,6 +4,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { captitalizeFirst } from "@/hooks/capitalize-first-word";
+import { toast } from "@/hooks/use-toast";
 
 import {
   Form,
@@ -26,8 +27,8 @@ import {
   SelectValue,
   SelectItem,
   SelectContent,
+  SelectSeparator,
 } from "@/components/ui/select";
-import { Separator } from "@radix-ui/react-select";
 import { Button } from "@/components/ui/button";
 import { Pot } from "@/store/pots-store";
 import { Budget } from "@/store/budgets-store";
@@ -96,6 +97,18 @@ export function EditForm({
         total: total,
         theme: values.theme,
       };
+      if (
+        (dataArray as Pot[]).some((data) => data.theme === updatedPot.theme)
+      ) {
+        toast({
+          title: "Error",
+          description: "Theme is already in use",
+          className:
+            "bg-white border-0 sm:border-[1px] text-[#C94736] sm:bg-transparent sm:text-white",
+          variant: "destructive",
+        });
+        return;
+      }
       handleOnSubmit(updatedPot, theme);
     } else if (type === "budget") {
       const updatedBudget: Budget = {
@@ -103,6 +116,20 @@ export function EditForm({
         category: values.budgetCategory,
         theme: values.theme,
       };
+      if (
+        (dataArray as Budget[]).some(
+          (data) => data.theme === updatedBudget.theme
+        )
+      ) {
+        toast({
+          title: "Error",
+          description: "Theme is already in use",
+          className:
+            "bg-white border-0 sm:border-[1px] text-[#C94736] sm:bg-transparent sm:text-white",
+          variant: "destructive",
+        });
+        return;
+      }
       handleOnSubmit(updatedBudget, theme);
     } else {
       throw new Error(`Changes to ${captitalizeFirst(type)} failed!`);
@@ -148,11 +175,22 @@ export function EditForm({
                       <SelectGroup>
                         {budgetCategories.map((category, index) => (
                           <div key={index}>
-                            <SelectItem key={category} value={category}>
+                            <SelectItem
+                              value={category}
+                              className="text-[0.875rem]"
+                              disabled={
+                                type === "budget" &&
+                                (dataArray as Budget[]).some(
+                                  (data) =>
+                                    data.category === category &&
+                                    category !== field.value
+                                )
+                              }
+                            >
                               {category}
                             </SelectItem>
                             {index !== budgetCategories.length - 1 && (
-                              <Separator />
+                              <SelectSeparator />
                             )}
                           </div>
                         ))}
@@ -268,9 +306,10 @@ export function EditForm({
                         <SelectItem
                           key={key}
                           value={val}
-                          disabled={dataArray.some(
-                            (data) => data.theme === val
-                          )}
+                          disabled={
+                            dataArray.some((data) => data.theme === val) &&
+                            val !== theme
+                          }
                         >
                           <div className="w-full flex items-center">
                             <div className="flex items-center gap-4">

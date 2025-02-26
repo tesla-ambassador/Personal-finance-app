@@ -1,4 +1,4 @@
-import { DeleteModal } from "@/components/icons/delete-modal";
+import { DeleteModal } from "@/components/delete-modal";
 import { usePotsStore } from "@/provider/pots-provider";
 
 interface DeletePotProps {

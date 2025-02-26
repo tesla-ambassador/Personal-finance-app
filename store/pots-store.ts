@@ -1,5 +1,6 @@
 import { createStore } from "zustand";
 import data from "@/data.json";
+import { Balance } from "@/@types/data-types";
 import { persist } from "zustand/middleware";
 
 export type Pot = {
@@ -11,6 +12,7 @@ export type Pot = {
 
 export type PotsState = {
   pots: Pot[];
+  balance: Balance;
 };
 
 export type PotsActions = {
@@ -24,6 +26,7 @@ export type PotsStore = PotsState & PotsActions;
 
 const defaultState: PotsState = {
   pots: data.pots,
+  balance: data.balance,
 };
 
 export const createPotsStore = (initState: PotsState = defaultState) => {

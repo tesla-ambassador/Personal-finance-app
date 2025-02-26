@@ -3,7 +3,6 @@ import React from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePotsStore } from "@/provider/pots-provider";
 import { toast } from "@/hooks/use-toast";
 
 import {
@@ -51,6 +50,8 @@ export const themeObject: { [key: string]: string } = {
   Orange: "#BE6C49",
 };
 
+const themeArray = Object.entries(themeObject).map(([key, val]) => val);
+
 import {
   Select,
   SelectGroup,
@@ -58,6 +59,7 @@ import {
   SelectValue,
   SelectItem,
   SelectContent,
+  SelectSeparator,
 } from "@/components/ui/select";
 import { Separator } from "@radix-ui/react-select";
 import { Button } from "@/components/ui/button";
@@ -105,13 +107,23 @@ export function GeneralForm({
 
   const closeRef = React.useRef<HTMLButtonElement>(null);
 
+  const availableCategories = budgetCategories.filter(
+    (category) =>
+      !(dataArray as Budget[]).some((data) => data.category === category)
+  );
+
+  const randomCategory =
+    availableCategories[
+      Math.floor(Math.random() * availableCategories.length)
+    ] || "Entertainment";
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       amount: "",
       theme: "#277C78",
-      budgetCategory: "Entertainment",
+      budgetCategory: randomCategory,
     },
   });
 
@@ -123,6 +135,15 @@ export function GeneralForm({
         theme: values.theme,
         total: 0,
       };
+      if ((dataArray as Pot[]).some((data) => data.theme === newPot.theme)) {
+        toast({
+          title: "Error",
+          description: "Theme is already in use",
+          className: "bg-white border-0 sm:border-[1px] text-[#C94736] sm:bg-transparent sm:text-white",
+          variant: "destructive",
+        });
+        return;
+      }
       handleOnSubmit(newPot);
     } else if (type === "budget") {
       const newBudget: Budget = {
@@ -130,6 +151,16 @@ export function GeneralForm({
         maximum: Number(values.amount),
         theme: values.theme,
       };
+      if ((dataArray as Budget[]).some((data) => data.theme === newBudget.theme)) {
+        toast({
+          title: "Error",
+          description: "Theme is already in use",
+          className:
+            "bg-white border-0 sm:border-[1px] text-[#C94736] sm:bg-transparent sm:text-white",
+          variant: "destructive",
+        });
+        return;
+      }
       handleOnSubmit(newBudget);
     } else {
       throw new Error(`Type of transaction isn't recognized.`);
@@ -175,11 +206,22 @@ export function GeneralForm({
                       <SelectGroup>
                         {budgetCategories.map((category, index) => (
                           <div key={index}>
-                            <SelectItem key={category} value={category}>
+                            <SelectItem
+                              value={category}
+                              className="text-[0.875rem]"
+                              disabled={
+                                type === "budget" &&
+                                (dataArray as Budget[]).some(
+                                  (data) =>
+                                    data.category === category &&
+                                    category !== field.value
+                                )
+                              }
+                            >
                               {category}
                             </SelectItem>
                             {index !== budgetCategories.length - 1 && (
-                              <Separator />
+                              <SelectSeparator />
                             )}
                           </div>
                         ))}
@@ -355,4 +397,8 @@ export function FormHeading({
       <p className="text-[0.875rem] text-[#696868]">{desc}</p>
     </div>
   );
+}
+
+export function ToastErrorTitle() {
+  return <div className="text-[#C94736]">Error</div>;
 }

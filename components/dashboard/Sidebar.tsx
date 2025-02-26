@@ -21,7 +21,7 @@ const pages = [
   {
     id: 2,
     name: "Transactions",
-    url: "#",
+    url: "/transactions",
     icon: TransactionsIcon,
   },
 

@@ -1,4 +1,4 @@
-import { DeleteModal } from "@/components/icons/delete-modal";
+import { DeleteModal } from "@/components/delete-modal";
 import { useBudgetStore } from "@/provider/budgets-provider";
 
 interface DeleteBudgetProps {
@@ -8,6 +8,7 @@ interface DeleteBudgetProps {
 export function DeleteBudgetModal({ theme, name }: DeleteBudgetProps) {
   const { deleteBudget } = useBudgetStore((state) => state);
   function onDelete(themeId: string) {
+    console.log(themeId);
     deleteBudget(themeId);
   }
   return (

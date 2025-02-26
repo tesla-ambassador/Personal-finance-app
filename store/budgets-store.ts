@@ -1,6 +1,6 @@
 import { createStore } from "zustand";
 import data from "@/data.json";
-import { Transaction } from "@/@types/data-types";
+import { Transaction, Balance } from "@/@types/data-types";
 
 export type Budget = {
   category: string;
@@ -11,6 +11,7 @@ export type Budget = {
 export type BudgetState = {
   budgets: Budget[];
   transactions: Transaction[];
+  balance: Balance;
 };
 
 export type BudgetActions = {
@@ -24,6 +25,7 @@ export type BudgetStore = BudgetState & BudgetActions;
 const defaultState: BudgetState = {
   budgets: data.budgets,
   transactions: data.transactions,
+  balance: data.balance,
 };
 
 export const createBudgetStore = (initState: BudgetState = defaultState) => {
@@ -33,12 +35,12 @@ export const createBudgetStore = (initState: BudgetState = defaultState) => {
       set((state) => ({ budgets: [...state.budgets, newBudget] })),
     deleteBudget: (id) =>
       set((state) => ({
-        budgets: state.budgets.filter((budget) => budget.category !== id),
+        budgets: state.budgets.filter((budget) => budget.theme !== id),
       })),
     editBudget: (id, updatedBudget) =>
       set((state) => ({
         budgets: state.budgets.map((budget) =>
-          budget.category === id ? { ...updatedBudget } : budget
+          budget.theme === id ? { ...updatedBudget } : budget
         ),
       })),
   }));

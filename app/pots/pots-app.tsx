@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { PageHeader } from "@/components/icons/page-headers";
+import { PageHeader } from "@/components/page-headers";
 import { PotsCard } from "@/components/pots-cards";
 import { usePotsStore } from "@/provider/pots-provider";
 

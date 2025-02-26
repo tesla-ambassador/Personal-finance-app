@@ -1,9 +1,9 @@
-import { Button } from "../ui/button";
-import { DialogClose } from "../ui/dialog";
+import { Button } from "./ui/button";
+import { DialogClose } from "./ui/dialog";
 
 interface DeleteModalProps {
   name: string;
-  type: "budget" | "pot"
+  type: "budget" | "pot";
   theme: string;
   handleDelete: (themeId: string) => void;
 }

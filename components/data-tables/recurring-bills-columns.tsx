@@ -75,7 +75,6 @@ export const recurringBillsColumns: ColumnDef<RecurringBills>[] = [
       );
     },
     sortingFn: "datetime",
-    meta: { hideOnMobile: true },
   },
   {
     accessorKey: "amount",

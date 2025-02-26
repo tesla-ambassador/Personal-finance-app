@@ -6,3 +6,9 @@ export type Transaction = {
   amount: number;
   recurring: boolean;
 };
+
+export type Balance = {
+  current: number;
+  income: number;
+  expenses: number;
+};

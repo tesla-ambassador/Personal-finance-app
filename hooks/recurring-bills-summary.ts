@@ -1,5 +1,5 @@
 import transactions from "@/data.json";
-import { RecurringBills } from "@/components/data-table/columns";
+import { RecurringBills } from "@/components/data-tables/recurring-bills-columns";
 
 const data: RecurringBills[] = transactions.transactions.filter(
   (transaction) => transaction.recurring === true

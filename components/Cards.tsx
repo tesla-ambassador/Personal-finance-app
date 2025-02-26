@@ -1,8 +1,7 @@
 import React from "react";
-import transactions from "@/data.json";
-import { RecurringBills } from "./data-table/columns";
 import { aggregateData } from "@/hooks/recurring-bills-summary";
 import { convertToDollar, sumOfNumbers } from "@/hooks/convert-to-dollar";
+import { useBudgetStore } from "@/provider/budgets-provider";
 
 const billSummary = [
   {
@@ -19,14 +18,11 @@ const billSummary = [
   },
 ];
 
-export async function getData(): Promise<RecurringBills[]> {
-  return transactions.transactions.filter(
+export function RecurringBillsSummary() {
+  const { transactions } = useBudgetStore((state) => state);
+  const data = transactions.filter(
     (transaction) => transaction.recurring === true
   );
-}
-
-export async function RecurringBillsSummary() {
-  const data = await getData();
   const amounts = data.map((transaction) => Math.abs(transaction.amount));
   return (
     <div className="space-y-6 sm:flex sm:justify-between sm:space-y-0 sm:gap-6 xl:flex-col xl:gap-6">
@@ -40,7 +36,9 @@ export async function RecurringBillsSummary() {
         </div>
         <div className="mt-6 flex flex-col sm:mt-3">
           <span className="font-semibold">Total Bills</span>
-          <span className="text-2xl sm:text-4xl py-4 sm:pt-4 sm:pb-0 font-bold">{convertToDollar(sumOfNumbers(amounts))}</span>
+          <span className="text-2xl sm:text-4xl py-4 sm:pt-4 sm:pb-0 font-bold">
+            {convertToDollar(sumOfNumbers(amounts))}
+          </span>
         </div>
       </div>
       <div className="bg-white rounded-lg p-5 space-y-5 w-full">

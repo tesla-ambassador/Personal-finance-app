@@ -1,4 +1,4 @@
-import { Button } from "../ui/button";
+import { Button } from "./ui/button";
 import { Plus } from "lucide-react";
 import { captitalizeFirst } from "@/hooks/capitalize-first-word";
 
@@ -9,7 +9,7 @@ import {
   DialogDescription,
   DialogTitle,
   DialogHeader,
-} from "../ui/dialog";
+} from "./ui/dialog";
 import { PotsUploadForm } from "@/app/pots/pots-forms";
 import { BudgetsUploadForm } from "@/app/budgets/budgets-forms";
 

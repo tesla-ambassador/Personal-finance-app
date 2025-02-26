@@ -37,6 +37,7 @@ export function BudgetsEditForm({
   const { budgets, editBudget } = useBudgetStore((state) => state);
 
   function handleFormSubmit(formData: Pot | Budget, themeId: string) {
+    console.log(formData as Budget)
     editBudget(themeId, formData as Budget);
   }
 
