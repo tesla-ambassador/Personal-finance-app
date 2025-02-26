@@ -44,7 +44,7 @@ export function BudgetPieChart({ data }: BudgetPieChartProps) {
       const safeKey = budget.category
         .toLowerCase()
         .replace(/[^a-zA-Z0-9]+(.)/g, (_: string, chr: string) =>
-          chr.toUpperCase()
+          chr.toUpperCase(),
         );
       config[safeKey] = {
         label: budget.category,
@@ -92,7 +92,7 @@ export function BudgetPieChart({ data }: BudgetPieChartProps) {
                       $
                       {sumOfTransactions(
                         budgets,
-                        transactions
+                        transactions,
                       ).toLocaleString()}
                     </tspan>
                     <tspan

@@ -102,28 +102,23 @@ export function GeneralForm({
           amount: z.string(),
           theme: z.string(),
           budgetCategory: z.string(),
-        }
+        },
   );
 
   const closeRef = React.useRef<HTMLButtonElement>(null);
 
   const availableCategories = budgetCategories.filter(
     (category) =>
-      !(dataArray as Budget[]).some((data) => data.category === category)
+      !(dataArray as Budget[]).some((data) => data.category === category),
   );
-
-  const randomCategory =
-    availableCategories[
-      Math.floor(Math.random() * availableCategories.length)
-    ] || "Entertainment";
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       amount: "",
-      theme: "#277C78",
-      budgetCategory: randomCategory,
+      theme: "",
+      budgetCategory: "",
     },
   });
 
@@ -139,7 +134,8 @@ export function GeneralForm({
         toast({
           title: "Error",
           description: "Theme is already in use",
-          className: "bg-white border-0 sm:border-[1px] text-[#C94736] sm:bg-transparent sm:text-white",
+          className:
+            "bg-white border-0 sm:border-[1px] text-[#C94736] sm:bg-transparent sm:text-white",
           variant: "destructive",
         });
         return;
@@ -151,7 +147,9 @@ export function GeneralForm({
         maximum: Number(values.amount),
         theme: values.theme,
       };
-      if ((dataArray as Budget[]).some((data) => data.theme === newBudget.theme)) {
+      if (
+        (dataArray as Budget[]).some((data) => data.theme === newBudget.theme)
+      ) {
         toast({
           title: "Error",
           description: "Theme is already in use",
@@ -199,7 +197,7 @@ export function GeneralForm({
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue />
+                        <SelectValue placeholder="Select a category" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -214,7 +212,7 @@ export function GeneralForm({
                                 (dataArray as Budget[]).some(
                                   (data) =>
                                     data.category === category &&
-                                    category !== field.value
+                                    category !== field.value,
                                 )
                               }
                             >
@@ -306,31 +304,10 @@ export function GeneralForm({
                 <FormLabel className="text-[#696868] font-semibold">
                   Theme
                 </FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select onValueChange={field.onChange}>
                   <FormControl>
                     <SelectTrigger className="px-5 py-3">
-                      {dataArray.some((data) => data.theme === field.value) ? (
-                        <div className="flex items-center gap-4">
-                          <div
-                            style={{
-                              backgroundColor: `${form.formState.defaultValues?.theme}`,
-                            }}
-                            className={`h-5 w-5 rounded-full`}
-                          ></div>
-                          <span>
-                            {Object.keys(themeObject).filter(
-                              (key) =>
-                                themeObject[key] ===
-                                form.formState.defaultValues?.theme
-                            )}
-                          </span>
-                        </div>
-                      ) : (
-                        <SelectValue />
-                      )}
+                      <SelectValue placeholder="Select a theme" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent
@@ -343,7 +320,7 @@ export function GeneralForm({
                           key={key}
                           value={val}
                           disabled={dataArray.some(
-                            (data) => data.theme === val
+                            (data) => data.theme === val,
                           )}
                         >
                           <div className="w-full flex items-center">

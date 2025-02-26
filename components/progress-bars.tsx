@@ -43,7 +43,7 @@ export function WithdrawAddPotsProgressBar({
 }: WithdrawAddPotsProgressBarProps) {
   const validatedNewValue = Math.max(
     0,
-    Math.min(newValue, type === "Withdraw" ? total : target - total)
+    Math.min(newValue, type === "Withdraw" ? total : target - total),
   );
   const percentage = (total / target) * 100;
   const newPercentage =
@@ -51,7 +51,7 @@ export function WithdrawAddPotsProgressBar({
       ? ((total + validatedNewValue) / target) * 100
       : ((total - validatedNewValue) / target) * 100;
 
-  const percentageOffsetWithdraw = 100 - (newPercentage + percentage);
+  const percentageOffsetWithdraw = 100 - newPercentage;
   const percentageOffsetAdd = 100 - (newPercentage - percentage);
   return (
     <div className="space-y-2">
@@ -73,7 +73,7 @@ export function WithdrawAddPotsProgressBar({
         {type === "Withdraw" ? (
           <div
             style={{
-              transform: `translateX(-${percentageOffsetAdd - percentage}%)`,
+              transform: `translateX(-${percentageOffsetWithdraw - percentage}%)`,
             }}
             className="absolute bg-[#C94736] w-full h-full flex-1 transition-all duration-150 rounded-r-lg"
           />

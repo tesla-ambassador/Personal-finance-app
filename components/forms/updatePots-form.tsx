@@ -50,19 +50,21 @@ export function WithdrawOrAddPotsForm({
   });
   const [progressValue, setProgressValue] = React.useState<number>(0);
   const closeRef = React.useRef<HTMLButtonElement>(null);
-  const { updateTotal } = usePotsStore((state) => state);
+  const { updateTotal, balance } = usePotsStore((state) => state);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     const validNewValue = Math.max(
       0,
-      Math.min(progressValue, type === "Add" ? target - total : total)
+      Math.min(progressValue, type === "Add" ? target - total : total),
     );
     if (type === "Add") {
       const finalValue = validNewValue + total;
-      updateTotal(finalValue, theme);
+      const remainingBalance = balance.current - validNewValue;
+      updateTotal(finalValue, theme, remainingBalance);
     } else {
       const finalValue = total - validNewValue;
-      updateTotal(finalValue, theme);
+      const remainingBalance = balance.current + validNewValue;
+      updateTotal(finalValue, theme, remainingBalance);
     }
     if (closeRef.current) {
       closeRef.current.click();

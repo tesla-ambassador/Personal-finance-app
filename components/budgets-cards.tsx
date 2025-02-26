@@ -8,6 +8,7 @@ import { useBudgetStore } from "@/provider/budgets-provider";
 import { convertToDollar } from "@/hooks/convert-to-dollar";
 import { Transaction } from "@/@types/data-types";
 import { Separator } from "./ui/separator";
+import Link from "next/link";
 import { sumOfBudgetCategory } from "@/hooks/some-of-specific-items";
 
 interface Budget {
@@ -22,7 +23,7 @@ export function BudgetCard({ category, theme, maxAmount }: Budget) {
   const [itemCount, setItemCount] = React.useState<number>(3);
 
   const categoryArray: Transaction[] = transactions.filter(
-    (transaction) => transaction.category === category
+    (transaction) => transaction.category === category,
   );
 
   function toggleSeeMore() {
@@ -65,7 +66,7 @@ export function BudgetCard({ category, theme, maxAmount }: Budget) {
           <h4 className="font-bold text-[1rem] text-[#201F24]">
             Latest Spending
           </h4>
-          {categoryArray.length > 3 && (
+          {categoryArray.length > 3 ? (
             <Button
               onClick={toggleSeeMore}
               variant={"link"}
@@ -80,12 +81,19 @@ export function BudgetCard({ category, theme, maxAmount }: Budget) {
                 } transiton-all duration-200 ease-in-out`}
               />
             </Button>
+          ) : (
+            <Link
+              href={`/transactions?filter=${category}`}
+              className="hover:underline"
+            >
+              <span className="text-[#696868] text-[0.875rem]">See All</span>
+            </Link>
           )}
         </div>
         <div>
           {categoryArray
             .sort(
-              (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+              (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
             )
             .slice(0, itemCount)
             .map((transaction, index) => (

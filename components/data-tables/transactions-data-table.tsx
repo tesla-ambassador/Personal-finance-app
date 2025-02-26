@@ -2,6 +2,7 @@
 
 // Decided to reconstruct this component so that I get used to making data tables.
 import React from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 
 import {
   ColumnDef,
@@ -60,7 +61,6 @@ import { useMediaQuery } from "@/hooks/media-query-hook";
 
 // Sorting and Filtering constants
 import { columnSorts } from "./recurring-bills-data-table";
-import { hover } from "@testing-library/user-event/dist/cjs/convenience/hover.js";
 
 const filterCategories = [
   "All Transactions",
@@ -94,11 +94,19 @@ export function TransactionDataTable<TData, TValue>({
   ]);
 
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+    [],
   );
+
+  const searchParams = useSearchParams();
+  const parameter = searchParams.get("filter");
+  const router = useRouter();
 
   const sortIndex = React.useRef<number>(0);
   const filterIndex = React.useRef<number>(0);
+
+  const [currentFilterIndex, setCurrentFilterIndex] = React.useState<number>(
+    filterIndex.current,
+  );
 
   const table = useReactTable({
     data,
@@ -122,8 +130,20 @@ export function TransactionDataTable<TData, TValue>({
       sortIndex.current = columnSorts.findIndex((col) => col.name === value);
       table.getColumn(selectedSort.col)?.toggleSorting(selectedSort.desc);
     },
-    [columnSorts, table, sortIndex]
+    [columnSorts, table, sortIndex],
   );
+
+  React.useEffect(() => {
+    const search = searchParams.has("filter");
+    if (search) {
+      table.getColumn("category")?.setFilterValue(parameter);
+    }
+    const urlFilterIndex = filterCategories.findIndex(
+      (filter) => filter === parameter,
+    );
+    setCurrentFilterIndex(urlFilterIndex);
+    router.replace("/transactions", undefined);
+  }, [searchParams, parameter]);
 
   const isMobile = useMediaQuery("(max-width: 639px)");
 
@@ -229,7 +249,7 @@ export function TransactionDataTable<TData, TValue>({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 ))}
@@ -246,13 +266,13 @@ export function TransactionDataTable<TData, TValue>({
                         <div>
                           {flexRender(
                             row.getVisibleCells()[0].column.columnDef.cell,
-                            row.getVisibleCells()[0].getContext()
+                            row.getVisibleCells()[0].getContext(),
                           )}
                         </div>
                         <div>
                           {flexRender(
                             row.getVisibleCells()[1].column.columnDef.cell,
-                            row.getVisibleCells()[1].getContext()
+                            row.getVisibleCells()[1].getContext(),
                           )}
                         </div>
                       </div>
@@ -260,13 +280,13 @@ export function TransactionDataTable<TData, TValue>({
                         <div>
                           {flexRender(
                             row.getVisibleCells()[2].column.columnDef.cell,
-                            row.getVisibleCells()[2].getContext()
+                            row.getVisibleCells()[2].getContext(),
                           )}
                         </div>
                         <div className="text-base">
                           {flexRender(
                             row.getVisibleCells()[3].column.columnDef.cell,
-                            row.getVisibleCells()[3].getContext()
+                            row.getVisibleCells()[3].getContext(),
                           )}
                         </div>
                       </div>
@@ -433,7 +453,7 @@ export function TransactionDataTable<TData, TValue>({
               <span className="text-[0.875rem]">Category</span>
               <div className="w-full max-w-48">
                 <Select
-                  defaultValue={filterCategories[filterIndex.current]}
+                  defaultValue={filterCategories[currentFilterIndex]}
                   onValueChange={(value) => {
                     filterIndex.current = filterCategories.indexOf(value);
                     value === "All Transactions"
@@ -477,7 +497,7 @@ export function TransactionDataTable<TData, TValue>({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   ))}
@@ -495,7 +515,7 @@ export function TransactionDataTable<TData, TValue>({
                       <TableCell key={cell.id}>
                         {flexRender(
                           cell.column.columnDef.cell,
-                          cell.getContext()
+                          cell.getContext(),
                         )}
                       </TableCell>
                     ))}

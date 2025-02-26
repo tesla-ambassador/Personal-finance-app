@@ -1,6 +1,7 @@
 import { createStore } from "zustand";
 import data from "@/data.json";
 import { Transaction, Balance } from "@/@types/data-types";
+import { persist } from "zustand/middleware";
 
 export type Budget = {
   category: string;
@@ -29,19 +30,24 @@ const defaultState: BudgetState = {
 };
 
 export const createBudgetStore = (initState: BudgetState = defaultState) => {
-  return createStore<BudgetStore>()((set) => ({
-    ...initState,
-    createBudget: (newBudget) =>
-      set((state) => ({ budgets: [...state.budgets, newBudget] })),
-    deleteBudget: (id) =>
-      set((state) => ({
-        budgets: state.budgets.filter((budget) => budget.theme !== id),
-      })),
-    editBudget: (id, updatedBudget) =>
-      set((state) => ({
-        budgets: state.budgets.map((budget) =>
-          budget.theme === id ? { ...updatedBudget } : budget
-        ),
-      })),
-  }));
+  return createStore<BudgetStore>()(
+    persist(
+      (set) => ({
+        ...initState,
+        createBudget: (newBudget) =>
+          set((state) => ({ budgets: [...state.budgets, newBudget] })),
+        deleteBudget: (id) =>
+          set((state) => ({
+            budgets: state.budgets.filter((budget) => budget.theme !== id),
+          })),
+        editBudget: (id, updatedBudget) =>
+          set((state) => ({
+            budgets: state.budgets.map((budget) =>
+              budget.theme === id ? { ...updatedBudget } : budget,
+            ),
+          })),
+      }),
+      { name: "budget-storage" },
+    ),
+  );
 };

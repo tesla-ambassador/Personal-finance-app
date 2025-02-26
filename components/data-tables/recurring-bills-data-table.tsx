@@ -65,8 +65,8 @@ interface DataTableProps<TData, TValue> {
 
 // Sorting strategies
 export const columnSorts = [
-  { id: 1, name: "Latest", col: "date", desc: false },
-  { id: 2, name: "Oldest", col: "date", desc: true },
+  { id: 1, name: "Latest", col: "date", desc: true },
+  { id: 2, name: "Oldest", col: "date", desc: false },
   { id: 3, name: "A to Z", col: "name", desc: false },
   { id: 4, name: "Z to A", col: "name", desc: true },
   { id: 5, name: "Highest", col: "amount", desc: false },
@@ -86,7 +86,7 @@ export function DataTable<TData, TValue>({
     },
   ]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+    [],
   );
 
   // Defining sorting indexes
@@ -117,7 +117,7 @@ export function DataTable<TData, TValue>({
       sortIndex.current = columnSorts.findIndex((col) => col.name === value);
       table.getColumn(selectedSort.col)?.toggleSorting(selectedSort.desc);
     },
-    [table, sortIndex, columnSorts]
+    [table, sortIndex, columnSorts],
   );
 
   // Lets be honest, tables don't fit on mobile screens ergo...
@@ -185,7 +185,7 @@ export function DataTable<TData, TValue>({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 ))}
@@ -201,20 +201,20 @@ export function DataTable<TData, TValue>({
                       <div>
                         {flexRender(
                           row.getVisibleCells()[0].column.columnDef.cell,
-                          row.getVisibleCells()[0].getContext()
+                          row.getVisibleCells()[0].getContext(),
                         )}
                       </div>
                       <div className="flex items-center justify-between">
                         <div>
                           {flexRender(
                             row.getVisibleCells()[1].column.columnDef.cell,
-                            row.getVisibleCells()[1].getContext()
+                            row.getVisibleCells()[1].getContext(),
                           )}
                         </div>
                         <div className="text-base">
                           {flexRender(
                             row.getVisibleCells()[2].column.columnDef.cell,
-                            row.getVisibleCells()[2].getContext()
+                            row.getVisibleCells()[2].getContext(),
                           )}
                         </div>
                       </div>
@@ -285,7 +285,7 @@ export function DataTable<TData, TValue>({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 ))}
@@ -303,7 +303,7 @@ export function DataTable<TData, TValue>({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}

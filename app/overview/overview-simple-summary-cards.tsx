@@ -8,6 +8,7 @@ import { Transaction } from "@/@types/data-types";
 import { convertToDollar } from "@/hooks/convert-to-dollar";
 import { BudgetPieChart } from "@/components/budget-chart";
 import { aggregateData } from "@/hooks/recurring-bills-summary";
+import { EmptyPotsAndBudgetsCards } from "@/components/empty-pots-budget";
 import Link from "next/link";
 
 interface SimpleSummaryCardProps {
@@ -25,7 +26,7 @@ export function SimpleSummaryCard({
     <div
       className={cn(
         "bg-white rounded-lg w-full p-6 shadow-sm space-y-3",
-        className
+        className,
       )}
     >
       <p className={cn("text-[#686969] text-[0.875rem]", className)}>{title}</p>
@@ -44,30 +45,43 @@ interface PotsProps {
 export function PotsOverviewSummaryCard({ dataArray, totalPots }: PotsProps) {
   return (
     <div className="bg-white rounded-lg shadow-sm w-full p-6 sm:p-8 space-y-5">
-      <CardHeader cardTitle="Pots" linkName="See Details" link="/pots" />
-      <div className="space-y-5 sm:flex sm:space-y-0 gap-5">
-        <div className="bg-[#F8F4F0] w-full h-full max-h-[110px] p-4 rounded-lg flex items-center gap-4">
-          <div>
-            <PotsIcon className="size-10" />
+      <CardHeader
+        cardTitle="Pots"
+        linkName={dataArray.length !== 0 ? "See Details" : "Click to create"}
+        link="/pots"
+      />
+      {dataArray.length !== 0 ? (
+        <div className="space-y-5 sm:flex sm:space-y-0 gap-5">
+          <div className="bg-[#F8F4F0] w-full h-full max-h-[110px] p-4 rounded-lg flex items-center gap-4">
+            <div>
+              <PotsIcon className="size-10" />
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="text-[#696868] text-[0.875rem]">
+                Total Saved
+              </span>
+              <span className="text-[#201F24] font-bold text-[2rem]">
+                ${totalPots.toLocaleString()}
+              </span>
+            </div>
           </div>
-          <div className="flex flex-col gap-2">
-            <span className="text-[#696868] text-[0.875rem]">Total Saved</span>
-            <span className="text-[#201F24] font-bold text-[2rem]">
-              ${totalPots.toLocaleString()}
-            </span>
+          <div className="grid grid-cols-2 gap-4 w-full">
+            {dataArray.map((pot, index) => (
+              <ProgressBudgetSummary
+                key={index}
+                theme={pot.theme}
+                name={pot.name}
+                amount={pot.total}
+              />
+            ))}
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-4 w-full">
-          {dataArray.map((pot, index) => (
-            <ProgressBudgetSummary
-              key={index}
-              theme={pot.theme}
-              name={pot.name}
-              amount={pot.total}
-            />
-          ))}
-        </div>
-      </div>
+      ) : (
+        <EmptyPotsAndBudgetsCards
+          name="No pots exist"
+          description="Please add a pot to see how much you can save 😁"
+        />
+      )}
     </div>
   );
 }
@@ -111,7 +125,7 @@ export function TransactionListOverview({
       <div>
         {dataArray
           .sort(
-            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
           )
           .slice(0, 5)
           .map((transaction, index) => (
@@ -161,22 +175,35 @@ export function BudgetSummaryOverview({
 }: BudgetSummaryOverviewProps) {
   return (
     <div className="bg-white mx-auto p-6 sm:p-8 space-y-5 rounded-lg shadow-sm w-full">
-      <CardHeader cardTitle="Budgets" link="/budgets" linkName="See Details" />
-      <div className="sm:flex items-center justify-between">
-        <div className="w-full">
-          <BudgetPieChart data={dataArray} />
+      <CardHeader
+        cardTitle="Budgets"
+        link="/budgets"
+        linkName={
+          dataArray.length !== 0 ? "See Details" : "Click to add a budget"
+        }
+      />
+      {dataArray.length !== 0 ? (
+        <div className="sm:flex items-center justify-between">
+          <div className="w-full">
+            <BudgetPieChart data={dataArray} />
+          </div>
+          <div className="grid grid-cols-2 gap-4 w-full lg:grid-cols-1 lg:max-w-[101px]">
+            {dataArray.map((budget, index) => (
+              <ProgressBudgetSummary
+                key={index}
+                name={budget.category}
+                amount={budget.maximum}
+                theme={budget.theme}
+              />
+            ))}
+          </div>
         </div>
-        <div className="grid grid-cols-2 gap-4 w-full lg:grid-cols-1 lg:max-w-[101px]">
-          {dataArray.map((budget, index) => (
-            <ProgressBudgetSummary
-              key={index}
-              name={budget.category}
-              amount={budget.maximum}
-              theme={budget.theme}
-            />
-          ))}
-        </div>
-      </div>
+      ) : (
+        <EmptyPotsAndBudgetsCards
+          name="No budgets added"
+          description="Add a budget to see how much you spend! 😬"
+        />
+      )}
     </div>
   );
 }

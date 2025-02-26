@@ -134,11 +134,13 @@ export default function Sidebar({ ref }: SideBarProps) {
             } transform-all duration-700 ease-in-out`}
           />
           <div
-            className={`${
-              isFullWidth ? "w-full opacity-100" : "w-0 opacity-0"
-            }transform-all duration-75 ease-in-out overflow-hidden`}
+            className={`transform-all duration-75 ease-in-out overflow-hidden`}
           >
-            Minimize Menu
+            <span
+              className={`${isFullWidth ? "opacity-100" : "opacity-0"} transition-all duration-75 ease-in-out`}
+            >
+              Minimize Menu
+            </span>
           </div>
         </button>
       </div>
