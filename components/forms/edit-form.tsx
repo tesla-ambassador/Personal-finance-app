@@ -74,7 +74,7 @@ export function EditForm({
           amount: z.string(),
           theme: z.string(),
           budgetCategory: z.string(),
-        }
+        },
   );
 
   const closeRef = React.useRef<HTMLButtonElement>(null);
@@ -97,18 +97,6 @@ export function EditForm({
         total: total,
         theme: values.theme,
       };
-      if (
-        (dataArray as Pot[]).some((data) => data.theme === updatedPot.theme)
-      ) {
-        toast({
-          title: "Error",
-          description: "Theme is already in use",
-          className:
-            "bg-white border-0 sm:border-[1px] text-[#C94736] sm:bg-transparent sm:text-white",
-          variant: "destructive",
-        });
-        return;
-      }
       handleOnSubmit(updatedPot, theme);
     } else if (type === "budget") {
       const updatedBudget: Budget = {
@@ -116,20 +104,6 @@ export function EditForm({
         category: values.budgetCategory,
         theme: values.theme,
       };
-      if (
-        (dataArray as Budget[]).some(
-          (data) => data.theme === updatedBudget.theme
-        )
-      ) {
-        toast({
-          title: "Error",
-          description: "Theme is already in use",
-          className:
-            "bg-white border-0 sm:border-[1px] text-[#C94736] sm:bg-transparent sm:text-white",
-          variant: "destructive",
-        });
-        return;
-      }
       handleOnSubmit(updatedBudget, theme);
     } else {
       throw new Error(`Changes to ${captitalizeFirst(type)} failed!`);
@@ -183,7 +157,7 @@ export function EditForm({
                                 (dataArray as Budget[]).some(
                                   (data) =>
                                     data.category === category &&
-                                    category !== field.value
+                                    category !== field.value,
                                 )
                               }
                             >
@@ -288,7 +262,7 @@ export function EditForm({
                           ></div>
                           <span>
                             {Object.keys(themeObject).filter(
-                              (key) => themeObject[key] === theme
+                              (key) => themeObject[key] === theme,
                             )}
                           </span>
                         </div>

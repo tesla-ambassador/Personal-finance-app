@@ -10,9 +10,11 @@ import {
 } from "./overview-simple-summary-cards";
 import { useBudgetStore } from "@/provider/budgets-provider";
 import { usePotsStore } from "@/provider/pots-provider";
+import { useSideBarStore } from "@/provider/sidebar-provider";
 export function OverViewApp() {
   const { pots, balance } = usePotsStore((state) => state);
   const { transactions, budgets } = useBudgetStore((state) => state);
+  const { isFullWidth } = useSideBarStore((state) => state);
 
   const totalPots = useMemo(() => {
     return pots.reduce((acc, curr) => acc + curr.total, 0);
