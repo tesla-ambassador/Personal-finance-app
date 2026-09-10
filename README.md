@@ -99,3 +99,5 @@ Also, you can use AI (Claude) to help explain things to you (NOT to copy and pas
 
 I'd like to thank my mama for her internet (Please employ me if you're reading this... I need to move out 😭). I'd also like to thank my girlfriend Comfort, for her patience and understanding. I'd also like to thank my friends, Josh, Ezra and Yafet for their support and encouragement.
 Okay, I'm done... Someone tell Elon Musk I said thank you to him.
+
+I broke up with Comfort last year 😂 Ain't shi sweet
