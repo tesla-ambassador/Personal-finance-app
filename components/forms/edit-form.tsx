@@ -90,7 +90,7 @@ export function EditForm({
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    if (type === "pot" && total) {
+    if (type === "pot" && total !== undefined) {
       const updatedPot: Pot = {
         name: values.name,
         target: Number(values.amount),
@@ -128,7 +128,7 @@ export function EditForm({
       <Form {...form}>
         <form className="space-y-4" onSubmit={(e) => form.handleSubmit(onSubmit)(e)}>
           {/* Kept first so the space-y gap is not added after the submit button */}
-          <DialogClose ref={closeRef} asChild className="hidden" />
+          <DialogClose ref={closeRef} className="hidden" />
           {type === "budget" ? (
             <FormField
               control={form.control}

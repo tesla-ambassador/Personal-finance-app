@@ -89,7 +89,7 @@ export function EllipsisDropdown({
             type === "budget" ? (
               <BudgetsEditForm category={name} theme={theme} maximum={amount} />
             ) : (
-              total && (
+              total !== undefined && (
                 <PotsEditForm
                   name={name}
                   theme={theme}
