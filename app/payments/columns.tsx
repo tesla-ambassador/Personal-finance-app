@@ -1,6 +1,9 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
+import {
+  ColumnDef,
+} from "@tanstack/react-table";
+import { type PaginatedTableFeatures } from "@/lib/table-features";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -13,7 +16,7 @@ export type Payment = {
 };
 
 // Column def: This defines the shape of our table.
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<PaginatedTableFeatures, Payment>[] = [
   { accessorKey: "status", header: "Status" },
   {
     accessorKey: "email",

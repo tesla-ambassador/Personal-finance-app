@@ -4,15 +4,14 @@ import React from "react";
 
 // Importing from tanstack
 import {
+  useTable,
   ColumnDef,
-  getCoreRowModel,
   flexRender,
-  useReactTable,
-  getSortedRowModel,
-  getFilteredRowModel,
   SortingState,
   ColumnFiltersState,
+  type RowData,
 } from "@tanstack/react-table";
+import { listTableFeatures, type ListTableFeatures } from "@/lib/table-features";
 
 // Importing the table component.
 import {
@@ -58,8 +57,8 @@ import { SortIconMobile } from "../icons/data-table-icons";
 import { useMediaQuery } from "@/hooks/media-query-hook";
 
 // Defining the data table props
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+interface DataTableProps<TData extends RowData> {
+  columns: ColumnDef<ListTableFeatures, TData>[];
   data: TData[];
 }
 
@@ -74,10 +73,10 @@ export const columnSorts = [
 ];
 
 // The data table;
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends RowData>({
   columns,
   data,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<TData>) {
   // Defining sorting and filtering states
   const [sorting, setSorting] = React.useState<SortingState>([
     {
@@ -89,16 +88,19 @@ export function DataTable<TData, TValue>({
     [],
   );
 
-  // Defining sorting indexes
-  const sortIndex = React.useRef<number>(0);
+  // The selected sort is derived from the table state.
+  const sortIndex = Math.max(
+    0,
+    columnSorts.findIndex(
+      (s) => s.col === sorting[0]?.id && s.desc === sorting[0]?.desc,
+    ),
+  );
 
   // Configuring Data table
-  const table = useReactTable({
+  const table = useTable({
+    features: listTableFeatures,
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     state: {
@@ -114,10 +116,9 @@ export function DataTable<TData, TValue>({
     (value: string) => {
       const selectedSort = columnSorts.find((col) => col.name === value);
       if (!selectedSort) return;
-      sortIndex.current = columnSorts.findIndex((col) => col.name === value);
       table.getColumn(selectedSort.col)?.toggleSorting(selectedSort.desc);
     },
-    [table, sortIndex, columnSorts],
+    [table],
   );
 
   // Lets be honest, tables don't fit on mobile screens ergo...
@@ -159,7 +160,7 @@ export function DataTable<TData, TValue>({
                           handleSortChange(columnSort.name);
                         }}
                         className={`${
-                          sortIndex.current === columnSort.id - 1
+                          sortIndex === columnSort.id - 1
                             ? "font-bold"
                             : ""
                         }`}
@@ -251,7 +252,7 @@ export function DataTable<TData, TValue>({
         </div>
         <div className="w-full max-w-40">
           <Select
-            defaultValue={columnSorts[sortIndex.current].name}
+            value={columnSorts[sortIndex].name}
             onValueChange={handleSortChange}
           >
             <SelectTrigger className="border-[#98908B] focus-visible:ring-0 ring-offset-0 focus-visible:border-black focus-visible:border-2">
@@ -297,7 +298,6 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

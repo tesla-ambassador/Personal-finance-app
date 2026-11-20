@@ -1,18 +1,16 @@
 "use client";
 
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 
 import {
+  useTable,
   ColumnDef,
-  getCoreRowModel,
   flexRender,
-  useReactTable,
-  getPaginationRowModel,
-  getSortedRowModel,
   SortingState,
   ColumnFiltersState,
-  getFilteredRowModel,
+  type RowData,
 } from "@tanstack/react-table";
+import { paginatedTableFeatures, type PaginatedTableFeatures } from "@/lib/table-features";
 
 import {
   Table,
@@ -36,8 +34,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+interface DataTableProps<TData extends RowData> {
+  columns: ColumnDef<PaginatedTableFeatures, TData>[];
   data: TData[];
 }
 
@@ -70,10 +68,10 @@ const columnSorts = [
 
 const categoryFilters = ["all", "anime", "show", "movie", "music"];
 
-export function DataTables<TData, TValue>({
+export function DataTables<TData extends RowData>({
   columns,
   data,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<TData>) {
   const [sorting, setSorting] = useState<SortingState>([
     {
       id: "amount",
@@ -81,15 +79,10 @@ export function DataTables<TData, TValue>({
     },
   ]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const sortIndex = useRef<number>(0);
-  const filterIndex = useRef<number>(0);
-  const table = useReactTable({
+  const table = useTable({
+    features: paginatedTableFeatures,
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     state: {
@@ -97,28 +90,39 @@ export function DataTables<TData, TValue>({
       columnFilters,
     },
   });
+  // The selected sort and category are derived from the table state.
+  const sortIndex = Math.max(
+    0,
+    columnSorts.findIndex(
+      (s) => s.col === sorting[0]?.id && s.desc === sorting[0]?.desc
+    )
+  );
+  const categoryFilter = columnFilters.find((f) => f.id === "category")
+    ?.value as string | undefined;
+  const filterIndex = categoryFilter
+    ? categoryFilters.indexOf(categoryFilter)
+    : 0;
+
   const handleSortChange = useCallback(
     (value: string) => {
       const selectedSort = columnSorts.find((col) => col.name === value);
       if (!selectedSort) return;
 
-      sortIndex.current = columnSorts.findIndex((col) => col.name === value);
       table.getColumn(selectedSort.col)?.toggleSorting(selectedSort.desc);
     },
-    [columnSorts, sortIndex, table]
+    [table]
   );
 
   const handleCategoryFilter = useCallback(
     (value: string) => {
-      filterIndex.current = categoryFilters.indexOf(value);
       value === "all"
         ? table.getColumn("category")?.setFilterValue(undefined)
         : table.getColumn("category")?.setFilterValue(value);
     },
-    [categoryFilters, table, filterIndex]
+    [table]
   );
 
-  const currentPage = table.getState().pagination.pageIndex;
+  const currentPage = table.state.pagination.pageIndex;
   const totalPages = table.getPageCount();
 
   return (
@@ -137,7 +141,7 @@ export function DataTables<TData, TValue>({
         <span className="text-[#696868]">Sort By</span>
         <div className="w-[110px]">
           <Select
-            defaultValue={columnSorts[sortIndex.current].name}
+            value={columnSorts[sortIndex].name}
             onValueChange={handleSortChange}
           >
             <SelectTrigger className="w-full border-[#98908B]">
@@ -160,7 +164,7 @@ export function DataTables<TData, TValue>({
         <span className="text-[#696868]">Sort By</span>
         <div className="w-[110px]">
           <Select
-            defaultValue={categoryFilters[sortIndex.current]}
+            value={categoryFilters[filterIndex]}
             onValueChange={handleCategoryFilter}
           >
             <SelectTrigger className="w-full border-[#98908B]">
@@ -202,7 +206,6 @@ export function DataTables<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
