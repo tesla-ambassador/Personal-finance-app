@@ -68,7 +68,7 @@ export function WithdrawAddPotsProgressBar({
           style={{
             transform: `translateX(-${100 - percentage}%)`,
           }}
-          className={`absolute z-10 w-full h-full flex-1 transition-all duration-150 rounded-l-lg bg-[#201F24] border-r-white border-r-[1px]`}
+          className={`absolute z-10 w-full h-full flex-1 transition-all duration-150 rounded-l-lg bg-[#201F24] border-r-white border-r`}
         />
         {type === "Withdraw" ? (
           <div
@@ -114,9 +114,11 @@ export function BudgetsProgressBar({
   const percentage = (spent / amount) * 100;
   return (
     <div className="space-y-4">
-      <span className="text-[#696868] text-[0.875rem]">
-        Maximum of {convertToDollar(amount)}
-      </span>
+      <div>
+        <span className="text-[#696868] text-[0.875rem]">
+          Maximum of {convertToDollar(amount)}
+        </span>
+      </div>
       <div className="relative rounded-md h-8 w-full bg-[#F8F4F0] overflow-hidden p-1">
         <div
           style={{

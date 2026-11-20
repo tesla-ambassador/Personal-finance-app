@@ -5,16 +5,14 @@ import React from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
 import {
+  useTable,
   ColumnDef,
-  getCoreRowModel,
   flexRender,
-  useReactTable,
-  getSortedRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
   SortingState,
   ColumnFiltersState,
+  type RowData,
 } from "@tanstack/react-table";
+import { paginatedTableFeatures, type PaginatedTableFeatures } from "@/lib/table-features";
 
 import {
   Table,
@@ -76,16 +74,16 @@ const filterCategories = [
   "General",
 ];
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+interface DataTableProps<TData extends RowData> {
+  columns: ColumnDef<PaginatedTableFeatures, TData>[];
   data: TData[];
 }
 
 // The data table;
-export function TransactionDataTable<TData, TValue>({
+export function TransactionDataTable<TData extends RowData>({
   columns,
   data,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>([
     {
       id: "date",
@@ -101,22 +99,25 @@ export function TransactionDataTable<TData, TValue>({
   const parameter = searchParams.get("filter");
   const router = useRouter();
 
-  const sortIndex = React.useRef<number>(0);
-  const filterIndex = React.useRef<number>(0);
-
-  const [currentFilterIndex, setCurrentFilterIndex] = React.useState<number>(
-    filterIndex.current,
+  // The selected sort and category are derived from the table state.
+  const sortIndex = Math.max(
+    0,
+    columnSorts.findIndex(
+      (s) => s.col === sorting[0]?.id && s.desc === sorting[0]?.desc,
+    ),
   );
+  const categoryFilter = columnFilters.find((f) => f.id === "category")
+    ?.value as string | undefined;
+  const filterIndex = categoryFilter
+    ? filterCategories.indexOf(categoryFilter)
+    : 0;
 
-  const table = useReactTable({
+  const table = useTable({
+    features: paginatedTableFeatures,
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
-    getPaginationRowModel: getPaginationRowModel(),
     state: {
       sorting,
       columnFilters,
@@ -127,10 +128,9 @@ export function TransactionDataTable<TData, TValue>({
     (value: string) => {
       const selectedSort = columnSorts.find((col) => col.name === value);
       if (!selectedSort) return;
-      sortIndex.current = columnSorts.findIndex((col) => col.name === value);
       table.getColumn(selectedSort.col)?.toggleSorting(selectedSort.desc);
     },
-    [columnSorts, table, sortIndex],
+    [table],
   );
 
   React.useEffect(() => {
@@ -138,16 +138,12 @@ export function TransactionDataTable<TData, TValue>({
     if (search) {
       table.getColumn("category")?.setFilterValue(parameter);
     }
-    const urlFilterIndex = filterCategories.findIndex(
-      (filter) => filter === parameter,
-    );
-    setCurrentFilterIndex(urlFilterIndex);
     router.replace("/transactions", undefined);
   }, [searchParams, parameter]);
 
   const isMobile = useMediaQuery("(max-width: 639px)");
 
-  const currentPage = table.getState().pagination.pageIndex;
+  const currentPage = table.state.pagination.pageIndex;
   const totalPages = table.getPageCount();
 
   if (isMobile) {
@@ -186,7 +182,7 @@ export function TransactionDataTable<TData, TValue>({
                           handleSortChange(columnSort.name);
                         }}
                         className={`${
-                          sortIndex.current === columnSort.id - 1
+                          sortIndex === columnSort.id - 1
                             ? "font-bold"
                             : ""
                         }`}
@@ -213,8 +209,6 @@ export function TransactionDataTable<TData, TValue>({
                     <div key={category}>
                       <DropdownMenuItem
                         onClick={() => {
-                          filterIndex.current =
-                            filterCategories.indexOf(category);
                           category === "All Transactions"
                             ? table
                                 .getColumn("category")
@@ -224,7 +218,7 @@ export function TransactionDataTable<TData, TValue>({
                                 ?.setFilterValue(category);
                         }}
                         className={`${
-                          filterIndex.current === index ? "font-bold" : ""
+                          filterIndex === index ? "font-bold" : ""
                         }`}
                       >
                         {category}
@@ -396,7 +390,7 @@ export function TransactionDataTable<TData, TValue>({
     return (
       <div>
         <div className="hidden sm:flex justify-between gap-3 pb-8">
-          <div className="relative flex items-center w-full max-w-[10.688rem] lg:max-w-[14rem]">
+          <div className="relative flex items-center w-full max-w-[10.688rem] lg:max-w-56">
             <Input
               placeholder="Search transactions"
               className="hidden lg:block border-[#98908B] w-full px-5 py-3 ring-offset-0 focus-visible:border-black focus-visible:ring-offset-0 focus-visible:border-2 focus-visible:ring-0 dark:focus-visible:ring-0"
@@ -426,7 +420,7 @@ export function TransactionDataTable<TData, TValue>({
               <span className="w-full text-[0.875rem]">Sort By</span>
               <div className="w-full max-w-40">
                 <Select
-                  defaultValue={columnSorts[sortIndex.current].name}
+                  value={columnSorts[sortIndex].name}
                   onValueChange={handleSortChange}
                 >
                   <SelectTrigger className="border-[#98908B] focus-visible:ring-0 ring-offset-0 focus-visible:border-black focus-visible:border-2">
@@ -453,9 +447,8 @@ export function TransactionDataTable<TData, TValue>({
               <span className="text-[0.875rem]">Category</span>
               <div className="w-full max-w-48">
                 <Select
-                  defaultValue={filterCategories[currentFilterIndex]}
+                  value={filterCategories[filterIndex]}
                   onValueChange={(value) => {
-                    filterIndex.current = filterCategories.indexOf(value);
                     value === "All Transactions"
                       ? table.getColumn("category")?.setFilterValue(undefined)
                       : table.getColumn("category")?.setFilterValue(value);
@@ -509,7 +502,6 @@ export function TransactionDataTable<TData, TValue>({
                 table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>

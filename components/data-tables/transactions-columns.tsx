@@ -1,7 +1,10 @@
 "use client";
 
 import React from "react";
-import { ColumnDef } from "@tanstack/react-table";
+import {
+  ColumnDef,
+} from "@tanstack/react-table";
+import { type PaginatedTableFeatures } from "@/lib/table-features";
 
 export type Transaction = {
   avatar: string;
@@ -12,7 +15,7 @@ export type Transaction = {
   recurring: boolean;
 };
 
-export const transactionsColumns: ColumnDef<Transaction>[] = [
+export const transactionsColumns: ColumnDef<PaginatedTableFeatures, Transaction>[] = [
   {
     accessorKey: "name",
     header: "Recipient/Sender",
@@ -36,7 +39,7 @@ export const transactionsColumns: ColumnDef<Transaction>[] = [
     header: () => <div className="text-center">Category</div>,
     cell: ({ row }) => {
       return (
-        <div className="sm:text-center pl-[2.75rem] sm:pl-0">
+        <div className="sm:text-center pl-11 sm:pl-0">
           <span>{row.getValue("category")}</span>
         </div>
       );
@@ -58,7 +61,7 @@ export const transactionsColumns: ColumnDef<Transaction>[] = [
         </div>
       );
     },
-    sortingFn: "datetime",
+    sortFn: "datetime",
   },
   {
     accessorKey: "amount",

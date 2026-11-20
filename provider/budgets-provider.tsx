@@ -14,13 +14,10 @@ interface BudgetStoreProviderProps {
 }
 
 export const BudgetStoreProvider = ({ children }: BudgetStoreProviderProps) => {
-  const storeRef = React.useRef<BudgetStoreAPI>(null);
-  if (!storeRef.current) {
-    storeRef.current = createBudgetStore();
-  }
+  const [store] = React.useState(() => createBudgetStore());
 
   return (
-    <BudgetStoreContext.Provider value={storeRef.current}>
+    <BudgetStoreContext.Provider value={store}>
       {children}
     </BudgetStoreContext.Provider>
   );

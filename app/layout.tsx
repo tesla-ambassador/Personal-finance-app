@@ -32,7 +32,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#F8F4F0]`}
       >
         <SideBarStoreProvider>
-          <Dashboard children={children} />
+          <Dashboard>{children}</Dashboard>
           <Toaster />
         </SideBarStoreProvider>
       </body>

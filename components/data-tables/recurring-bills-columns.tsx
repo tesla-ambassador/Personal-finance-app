@@ -1,7 +1,10 @@
 "use client";
 
 import React from "react";
-import { ColumnDef } from "@tanstack/react-table";
+import {
+  ColumnDef,
+} from "@tanstack/react-table";
+import { type ListTableFeatures } from "@/lib/table-features";
 import {
   getOrdinalSuffix,
   getDuePayment,
@@ -17,7 +20,7 @@ export type RecurringBills = {
   recurring: boolean;
 };
 
-export const recurringBillsColumns: ColumnDef<RecurringBills>[] = [
+export const recurringBillsColumns: ColumnDef<ListTableFeatures, RecurringBills>[] = [
   {
     accessorKey: "name",
     header: "Bill Title",
@@ -74,7 +77,7 @@ export const recurringBillsColumns: ColumnDef<RecurringBills>[] = [
         </div>
       );
     },
-    sortingFn: "datetime",
+    sortFn: "datetime",
   },
   {
     accessorKey: "amount",

@@ -125,10 +125,10 @@ export function BudgetCard({ category, theme, maxAmount }: Budget) {
                 </div>
                 {isExpanded
                   ? index !== categoryArray.length - 1 && (
-                      <Separator className="bg-[#696868] opacity-[15%]" />
+                      <Separator className="bg-[#696868] opacity-15" />
                     )
                   : index !== 2 && (
-                      <Separator className="bg-[#696868] opacity-[15%]" />
+                      <Separator className="bg-[#696868] opacity-15" />
                     )}
               </div>
             ))}

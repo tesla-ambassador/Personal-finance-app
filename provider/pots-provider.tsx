@@ -1,5 +1,5 @@
 "use client";
-import React, { createContext, useContext, ReactNode, useRef } from "react";
+import React, { createContext, useContext, ReactNode, useState } from "react";
 import { useStore } from "zustand";
 import { type PotsStore, createPotsStore } from "@/store/pots-store";
 
@@ -14,13 +14,10 @@ interface PotsStoreProviderProps {
 }
 
 export const PotsStoreProvider = ({ children }: PotsStoreProviderProps) => {
-  const storeRef = useRef<PotsStoreAPI>(null);
-  if (!storeRef.current) {
-    storeRef.current = createPotsStore();
-  }
+  const [store] = useState(() => createPotsStore());
 
   return (
-    <PotsStoreContext.Provider value={storeRef.current}>
+    <PotsStoreContext.Provider value={store}>
       {children}
     </PotsStoreContext.Provider>
   );

@@ -58,19 +58,19 @@ export function EditForm({
     type === "pot"
       ? {
           name: z
-            .string({ required_error: "Pots name is Required" })
-            .min(2, { message: "Pot name should be 2 characters or more." })
-            .max(30, { message: "Pot name should be less than 30 characters." })
-            .nonempty({ message: "Pots name is Required." }),
+            .string({ error: "Pots name is Required" })
+            .min(2, { error: "Pot name should be 2 characters or more." })
+            .max(30, { error: "Pot name should be less than 30 characters." })
+            .min(1, { error: "Pots name is Required." }),
           amount: z
             .string()
-            .nonempty({
-              message: "Plese set a target",
-            })
+            .min(1, { error: "Please set a target" })
             .regex(/^\d+$/, "Must be a number"),
           theme: z.string(),
+          budgetCategory: z.string(),
         }
       : {
+          name: z.string(),
           amount: z.string(),
           theme: z.string(),
           budgetCategory: z.string(),
@@ -90,7 +90,7 @@ export function EditForm({
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    if (type === "pot" && total) {
+    if (type === "pot" && total !== undefined) {
       const updatedPot: Pot = {
         name: values.name,
         target: Number(values.amount),
@@ -126,7 +126,9 @@ export function EditForm({
         />
       )}
       <Form {...form}>
-        <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+        <form className="space-y-4" onSubmit={(e) => form.handleSubmit(onSubmit)(e)}>
+          {/* Kept first so the space-y gap is not added after the submit button */}
+          <DialogClose ref={closeRef} className="hidden" />
           {type === "budget" ? (
             <FormField
               control={form.control}
@@ -273,7 +275,7 @@ export function EditForm({
                   </FormControl>
                   <SelectContent
                     avoidCollisions={false}
-                    className="max-h-[18.625rem]"
+                    className="max-h-74.5"
                   >
                     <SelectGroup className="space-y-3">
                       {Object.entries(themeObject).map(([key, val]) => (
@@ -314,7 +316,6 @@ export function EditForm({
           <Button type="submit" className="w-full p-4">
             Save Changes
           </Button>
-          <DialogClose ref={closeRef} asChild className="hidden" />
         </form>
       </Form>
     </div>
