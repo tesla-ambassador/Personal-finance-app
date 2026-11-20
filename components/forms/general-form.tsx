@@ -93,7 +93,7 @@ export function GeneralForm({
           amount: z
             .string()
             .nonempty({
-              message: "Plese set a target",
+              message: "Please set a target",
             })
             .regex(/^\d+$/, "Must be a number"),
           theme: z.string(),
