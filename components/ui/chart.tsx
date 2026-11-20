@@ -2,6 +2,10 @@
 
 import * as React from "react"
 import * as RechartsPrimitive from "recharts"
+import type {
+  NameType,
+  ValueType,
+} from "recharts/types/component/DefaultTooltipContent"
 
 import { cn } from "@/lib/utils"
 
@@ -111,7 +115,10 @@ const ChartTooltipContent = React.forwardRef<
       indicator?: "line" | "dot" | "dashed"
       nameKey?: string
       labelKey?: string
-    }
+    } & Omit<
+      RechartsPrimitive.DefaultTooltipContentProps<ValueType, NameType>,
+      "accessibilityLayer"
+    >
 >(
   (
     {
@@ -192,7 +199,7 @@ const ChartTooltipContent = React.forwardRef<
 
             return (
               <div
-                key={item.dataKey}
+                key={`${key}-${index}`}
                 className={cn(
                   "flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-slate-500 dark:[&>svg]:text-slate-400",
                   indicator === "dot" && "items-center"
@@ -261,7 +268,10 @@ const ChartLegend = RechartsPrimitive.Legend
 const ChartLegendContent = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> &
-    Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
+    Pick<
+      RechartsPrimitive.DefaultLegendContentProps,
+      "payload" | "verticalAlign"
+    > & {
       hideIcon?: boolean
       nameKey?: string
     }
