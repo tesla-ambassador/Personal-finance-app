@@ -127,6 +127,8 @@ export function EditForm({
       )}
       <Form {...form}>
         <form className="space-y-4" onSubmit={(e) => form.handleSubmit(onSubmit)(e)}>
+          {/* Kept first so the space-y gap is not added after the submit button */}
+          <DialogClose ref={closeRef} asChild className="hidden" />
           {type === "budget" ? (
             <FormField
               control={form.control}
@@ -273,7 +275,7 @@ export function EditForm({
                   </FormControl>
                   <SelectContent
                     avoidCollisions={false}
-                    className="max-h-[18.625rem]"
+                    className="max-h-74.5"
                   >
                     <SelectGroup className="space-y-3">
                       {Object.entries(themeObject).map(([key, val]) => (
@@ -314,7 +316,6 @@ export function EditForm({
           <Button type="submit" className="w-full p-4">
             Save Changes
           </Button>
-          <DialogClose ref={closeRef} asChild className="hidden" />
         </form>
       </Form>
     </div>

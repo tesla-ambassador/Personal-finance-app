@@ -13,7 +13,7 @@ interface PotsCard {
 
 export function PotsCard({ name, theme, target, total }: PotsCard) {
   return (
-    <div className="bg-white mx-auto space-y-8 py-6 px-5 sm:p-6 w-full md:max-w-[41.75rem] desktop:mx-0 desktop:max-w-none rounded-lg shadow-sm">
+    <div className="bg-white mx-auto space-y-8 py-6 px-5 sm:p-6 w-full md:max-w-167 desktop:mx-0 desktop:max-w-none rounded-lg shadow-xs">
       {/* Card Header */}
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-3">

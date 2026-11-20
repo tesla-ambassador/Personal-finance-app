@@ -25,7 +25,7 @@ export function SimpleSummaryCard({
   return (
     <div
       className={cn(
-        "bg-white rounded-lg w-full p-6 shadow-sm space-y-3",
+        "bg-white rounded-lg w-full p-6 shadow-xs",
         className,
       )}
     >
@@ -44,7 +44,7 @@ interface PotsProps {
 
 export function PotsOverviewSummaryCard({ dataArray, totalPots }: PotsProps) {
   return (
-    <div className="bg-white rounded-lg shadow-sm w-full p-6 sm:p-8 space-y-5">
+    <div className="bg-white rounded-lg shadow-xs w-full p-6 sm:p-8 space-y-5">
       <CardHeader
         cardTitle="Pots"
         linkName={dataArray.length !== 0 ? "See Details" : "Click to create"}
@@ -114,7 +114,7 @@ export function TransactionListOverview({
   dataArray,
 }: TransactionListOverviewProps) {
   return (
-    <div className="space-y-8 mx-auto bg-white rounded-lg shadow-sm w-full p-6 sm:p-8">
+    <div className="space-y-8 mx-auto bg-white rounded-lg shadow-xs w-full p-6 sm:p-8">
       <div>
         <CardHeader
           cardTitle="Transactions"
@@ -174,7 +174,7 @@ export function BudgetSummaryOverview({
   dataArray,
 }: BudgetSummaryOverviewProps) {
   return (
-    <div className="bg-white mx-auto p-6 sm:p-8 space-y-5 rounded-lg shadow-sm w-full">
+    <div className="bg-white mx-auto p-6 sm:p-8 space-y-5 rounded-lg shadow-xs w-full">
       <CardHeader
         cardTitle="Budgets"
         link="/budgets"
@@ -228,7 +228,7 @@ const billSummary = [
 
 export function RecurringBillsOverview() {
   return (
-    <div className="bg-white mx-auto p-6 sm:p-8 rounded-lg shadow-sm w-full space-y-8">
+    <div className="bg-white mx-auto p-6 sm:p-8 rounded-lg shadow-xs w-full space-y-8">
       <CardHeader
         cardTitle="Recurring Bills"
         link="/recurringbills"

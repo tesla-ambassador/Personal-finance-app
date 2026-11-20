@@ -91,6 +91,8 @@ export function WithdrawOrAddPotsForm({
       />
       <Form {...form}>
         <form className="space-y-4" onSubmit={(e) => form.handleSubmit(onSubmit)(e)}>
+          {/* Kept first so the space-y gap is not added after the submit button */}
+          <DialogClose ref={closeRef} className="hidden" />
           <FormField
             control={form.control}
             name="amount"
@@ -130,7 +132,6 @@ export function WithdrawOrAddPotsForm({
           <Button type="submit" className="w-full p-4">
             {type === "Withdraw" ? "Confirm Withdrawal" : "Confirm Addition"}
           </Button>
-          <DialogClose ref={closeRef} className="hidden" />
         </form>
       </Form>
     </div>

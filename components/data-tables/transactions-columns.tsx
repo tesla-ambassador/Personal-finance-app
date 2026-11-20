@@ -39,7 +39,7 @@ export const transactionsColumns: ColumnDef<PaginatedTableFeatures, Transaction>
     header: () => <div className="text-center">Category</div>,
     cell: ({ row }) => {
       return (
-        <div className="sm:text-center pl-[2.75rem] sm:pl-0">
+        <div className="sm:text-center pl-11 sm:pl-0">
           <span>{row.getValue("category")}</span>
         </div>
       );

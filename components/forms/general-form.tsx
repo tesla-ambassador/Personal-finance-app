@@ -135,7 +135,7 @@ export function GeneralForm({
           title: "Error",
           description: "Theme is already in use",
           className:
-            "bg-white border-0 sm:border-[1px] text-[#C94736] sm:bg-transparent sm:text-white",
+            "bg-white border-0 sm:border text-[#C94736] sm:bg-transparent sm:text-white",
           variant: "destructive",
         });
         return;
@@ -154,7 +154,7 @@ export function GeneralForm({
           title: "Error",
           description: "Theme is already in use",
           className:
-            "bg-white border-0 sm:border-[1px] text-[#C94736] sm:bg-transparent sm:text-white",
+            "bg-white border-0 sm:border text-[#C94736] sm:bg-transparent sm:text-white",
           variant: "destructive",
         });
         return;
@@ -182,6 +182,8 @@ export function GeneralForm({
       )}
       <Form {...form}>
         <form className="space-y-4" onSubmit={(e) => form.handleSubmit(onSubmit)(e)}>
+          {/* Kept first so the space-y gap is not added after the submit button */}
+          <DialogClose ref={closeRef} className="hidden" />
           {type === "budget" ? (
             <FormField
               control={form.control}
@@ -312,7 +314,7 @@ export function GeneralForm({
                   </FormControl>
                   <SelectContent
                     avoidCollisions={false}
-                    className="max-h-[18.625rem]"
+                    className="max-h-74.5"
                   >
                     <SelectGroup className="space-y-3">
                       {Object.entries(themeObject).map(([key, val]) => (
@@ -354,7 +356,6 @@ export function GeneralForm({
           <Button type="submit" className="w-full p-4">
             Add {type}
           </Button>
-          <DialogClose ref={closeRef} className="hidden" />
         </form>
       </Form>
     </div>

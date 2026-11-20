@@ -95,7 +95,13 @@ const FormLabel = React.forwardRef<
   return (
     <Label
       ref={ref}
-      className={cn(error && "text-red-500 dark:text-red-900", className)}
+      className={cn(
+        // Block-level with a 24px line so the space-y-2 gap below the label
+        // applies (Tailwind 4 puts space-y margins on the preceding sibling).
+        "block leading-6",
+        error && "text-red-500 dark:text-red-900",
+        className
+      )}
       htmlFor={formItemId}
       {...props}
     />

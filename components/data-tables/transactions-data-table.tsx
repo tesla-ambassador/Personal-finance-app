@@ -390,7 +390,7 @@ export function TransactionDataTable<TData extends RowData>({
     return (
       <div>
         <div className="hidden sm:flex justify-between gap-3 pb-8">
-          <div className="relative flex items-center w-full max-w-[10.688rem] lg:max-w-[14rem]">
+          <div className="relative flex items-center w-full max-w-[10.688rem] lg:max-w-56">
             <Input
               placeholder="Search transactions"
               className="hidden lg:block border-[#98908B] w-full px-5 py-3 ring-offset-0 focus-visible:border-black focus-visible:ring-offset-0 focus-visible:border-2 focus-visible:ring-0 dark:focus-visible:ring-0"

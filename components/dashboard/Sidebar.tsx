@@ -152,7 +152,7 @@ export default function Sidebar({ ref }: SideBarProps) {
 export function NavBar() {
   const currentPath = usePathname();
   return (
-    <div className="px-4 sm:px-10 bg-[#201F24] w-full h-[3.25rem] sm:h-[4.625rem] rounded-tl-2xl rounded-tr-2xl lg:hidden fixed z-10 bottom-0 left-0">
+    <div className="px-4 sm:px-10 bg-[#201F24] w-full h-13 sm:h-18.5 rounded-tl-2xl rounded-tr-2xl lg:hidden fixed z-10 bottom-0 left-0">
       <div className="flex justify-between items-center gap-3 h-full pt-2">
         {pages.map((page) => (
           <a
