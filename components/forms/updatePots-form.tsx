@@ -23,7 +23,7 @@ import { usePotsStore } from "@/provider/pots-provider";
 const formSchema = z.object({
   amount: z
     .string()
-    .nonempty({ message: "Amount must contain at least 1 digit." })
+    .min(1, { error: "Amount must contain at least 1 digit." })
     .regex(/^\d+$/, "Must be a number"),
 });
 

@@ -58,19 +58,19 @@ export function EditForm({
     type === "pot"
       ? {
           name: z
-            .string({ required_error: "Pots name is Required" })
-            .min(2, { message: "Pot name should be 2 characters or more." })
-            .max(30, { message: "Pot name should be less than 30 characters." })
-            .nonempty({ message: "Pots name is Required." }),
+            .string({ error: "Pots name is Required" })
+            .min(2, { error: "Pot name should be 2 characters or more." })
+            .max(30, { error: "Pot name should be less than 30 characters." })
+            .min(1, { error: "Pots name is Required." }),
           amount: z
             .string()
-            .nonempty({
-              message: "Please set a target",
-            })
+            .min(1, { error: "Please set a target" })
             .regex(/^\d+$/, "Must be a number"),
           theme: z.string(),
+          budgetCategory: z.string(),
         }
       : {
+          name: z.string(),
           amount: z.string(),
           theme: z.string(),
           budgetCategory: z.string(),
