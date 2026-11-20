@@ -1,5 +1,5 @@
 "use client"
-import React, { createContext, useContext, ReactNode, useRef } from "react";
+import React, { createContext, useContext, ReactNode, useState } from "react";
 import { useStore } from "zustand";
 import { type SideBarStore, createSideBarStore } from "@/store/sidebar-store";
 
@@ -20,13 +20,10 @@ interface SideBarStoreProviderProps {
 export const SideBarStoreProvider = ({
   children,
 }: SideBarStoreProviderProps) => {
-  const storeRef = useRef<SideBarStoreAPI>(null);
-  if (!storeRef.current) {
-    storeRef.current = createSideBarStore();
-  }
+  const [store] = useState(() => createSideBarStore());
 
   return (
-    <SideBarStoreContext.Provider value={storeRef.current}>
+    <SideBarStoreContext.Provider value={store}>
       {children}
     </SideBarStoreContext.Provider>
   );

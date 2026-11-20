@@ -33,7 +33,7 @@ export function BudgetPieChart({ data }: BudgetPieChartProps) {
   }, [data]);
 
   const generateConfig = (data: Budget[]): ChartConfig => {
-    const config: Record<string, any> = {
+    const config: ChartConfig = {
       maximum: {
         label: "Budget Maximum",
       },

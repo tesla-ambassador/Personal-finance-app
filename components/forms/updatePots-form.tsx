@@ -90,7 +90,7 @@ export function WithdrawOrAddPotsForm({
         type={type}
       />
       <Form {...form}>
-        <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+        <form className="space-y-4" onSubmit={(e) => form.handleSubmit(onSubmit)(e)}>
           <FormField
             control={form.control}
             name="amount"

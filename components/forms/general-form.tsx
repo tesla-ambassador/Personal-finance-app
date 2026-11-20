@@ -181,7 +181,7 @@ export function GeneralForm({
         />
       )}
       <Form {...form}>
-        <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+        <form className="space-y-4" onSubmit={(e) => form.handleSubmit(onSubmit)(e)}>
           {type === "budget" ? (
             <FormField
               control={form.control}
