@@ -12,3 +12,15 @@ CREATE TABLE budgets (
     maximum_cents INTEGER NOT NULL CHECK (maximum_cents > 0),
     theme TEXT NOT NULL UNIQUE
 );
+
+CREATE TABLE transactions (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    avatar TEXT NOT NULL,
+    category TEXT NOT NULL ,
+    amount_cents INTEGER NOT NULL CHECK (amount_cents <> 0) ,
+    occurred_at TIMESTAMPTZ NOT NULL,
+    recurring BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+CREATE INDEX transactions_occured_at_idx ON transactions (occured_at);
