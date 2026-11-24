@@ -23,4 +23,4 @@ CREATE TABLE transactions (
     recurring BOOLEAN NOT NULL DEFAULT FALSE
 );
 
-CREATE INDEX transactions_occured_at_idx ON transactions (occured_at);
+CREATE INDEX transactions_occured_at_idx ON transactions (occurred_at);
